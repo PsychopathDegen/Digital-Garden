@@ -98,7 +98,6 @@
 
 <script src="app.js"></script>
 <script>
-  // Render lobby game cards
   const GAMES = [
     { id:'dice', name:'Dice', desc:'Roll under or over your target.' },
     { id:'limbo', name:'Limbo', desc:'Set a multiplier and hope it hits.' },
@@ -118,8 +117,7 @@
     const card = document.createElement('div');
     card.className = 'card';
     card.onclick = () => location.href = 'games/' + g.id + '.html';
-    card.innerHTML = `<div class="card-tag">PLAY</div>
-      <h3>${g.name}</h3><p>${g.desc}</p>`;
+    card.innerHTML = `<h3>${g.name}</h3><p>${g.desc}</p>`;
     grid.appendChild(card);
   });
 </script>
