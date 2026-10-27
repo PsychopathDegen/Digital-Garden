@@ -8,40 +8,226 @@
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand" onclick="location.href='index.html'">
-    Play<span>Stake</span>
-  </div>
-  <div class="top-right">
-    <div class="balance-pill">
-      <span class="coin">₮</span>
-      <span id="balanceDisplay">0.00</span>
-      <span class="cur">USDT</span>
+<!-- Left Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <button class="icon-btn" id="menuBtn" onclick="toggleSidebar()">☰</button>
+    <div class="sb-tabs">
+      <button class="tab active">Casino</button>
+      <button class="tab">Sports</button>
     </div>
-    <button class="btn deposit-btn" onclick="openDeposit()">Deposit</button>
-    <button class="btn ghost small" onclick="openWallet()">Wallet</button>
   </div>
-</header>
-
-<div class="banner">Play money only — for fun. No real money, no real crypto.</div>
-
-<main class="container">
-  <div class="lobby-head">
-    <h1>Originals</h1>
-    <p class="muted">12 games · provably fair · play money</p>
+  
+  <div class="sb-menu">
+    <a href="#" class="sb-link">🏷️ Promotions <span>⌄</span></a>
+    <a href="#" class="sb-link">🏆 Challenges</a>
+    <a href="#" class="sb-link">🤝 Affiliate</a>
+    <a href="#" class="sb-link">👑 VIP Club</a>
+    <a href="#" class="sb-link">📝 Blog</a>
+    <a href="#" class="sb-link">💬 Forum</a>
+    <div class="sb-divider"></div>
+    <a href="#" class="sb-link">🤝 Sponsorships <span>⌄</span></a>
+    <a href="#" class="sb-link">🛡️ Responsible Gambling</a>
+    <a href="#" class="sb-link">🎧 Live Support</a>
+    <a href="#" class="sb-link">🌐 Language: English <span>⌄</span></a>
   </div>
+</aside>
 
-  <div class="games" id="gameGrid"></div>
-</main>
+<!-- Collapsed Sidebar (Icons only) -->
+<aside class="sidebar-mini" id="sidebarMini">
+  <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+  <a href="#" class="mini-icon">🏷️</a>
+  <a href="#" class="mini-icon">🏆</a>
+  <a href="#" class="mini-icon">🤝</a>
+  <a href="#" class="mini-icon">👑</a>
+  <a href="#" class="mini-icon">📝</a>
+  <a href="#" class="mini-icon">💬</a>
+  <div class="sb-divider"></div>
+  <a href="#" class="mini-icon">🛡️</a>
+  <a href="#" class="mini-icon">🎧</a>
+</aside>
 
-<!-- Deposit Modal -->
+<!-- Main Content Area -->
+<div class="main-wrapper" id="mainWrapper">
+  
+  <!-- Top Navbar -->
+  <header class="topbar">
+    <div class="brand" onclick="location.href='index.html'">
+      Play<span>Stake</span>
+    </div>
+    
+    <div class="top-center">
+      <div class="balance-pill">
+        <span id="balanceDisplay">0.00000000</span>
+        <span class="coin">₮</span>
+        <span class="dropdown-arrow">⌄</span>
+      </div>
+      <button class="btn wallet-btn" onclick="openWallet()">Wallet</button>
+    </div>
+
+    <div class="top-right">
+      <button class="icon-btn">🔍</button>
+      <button class="icon-btn">👤</button>
+      <button class="icon-btn">🔔</button>
+      <button class="icon-btn">💬</button>
+    </div>
+  </header>
+
+  <div class="banner">Play money only — for fun. No real money, no real crypto.</div>
+
+  <main class="content-area">
+    
+    <!-- Hero Banners -->
+    <div class="hero-grid">
+      <div class="hero-card casino-hero">
+        <div class="hero-text">
+          <h2>CASINO</h2>
+        </div>
+        <div class="hero-img-placeholder">🎲 🎰</div>
+        <div class="hero-footer">
+          <span>▶ Play Now</span>
+          <span class="live-dot">🟢 35,832 playing</span>
+        </div>
+      </div>
+      <div class="hero-card sports-hero">
+        <div class="hero-text">
+          <h2>SPORTS</h2>
+        </div>
+        <div class="hero-img-placeholder">⚽ 🏁</div>
+        <div class="hero-footer">
+          <span>⚽ Bet Now</span>
+          <span class="live-dot">🟢 19,541 betting</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Search PlayStake.com" />
+        <span class="search-shortcut">Ctrl+K</span>
+      </div>
+    </div>
+
+    <!-- VIP Progress -->
+    <div class="vip-section">
+      <div class="section-title">🏆 VIP Progress <span>›</span></div>
+      <div class="vip-bar-container">
+        <div class="vip-badge">⭐</div>
+        <div class="vip-info">
+          <div class="vip-name">IsaiahTol <span>›</span></div>
+          <div class="vip-progress-track">
+            <div class="vip-progress-fill" style="width: 87%;"></div>
+          </div>
+          <div class="vip-levels">
+            <span>Platinum II</span>
+            <span>87.65%</span>
+            <span>Platinum III</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Continue Playing -->
+    <div class="section-title">▶ Continue Playing <span>›</span></div>
+    <div class="games-row">
+      
+      <!-- Game Card 1 -->
+      <div class="game-card" onclick="location.href='games/limbo.html'">
+        <div class="gc-img bg-limbo">
+          <div class="gc-content"><span>900x</span></div>
+        </div>
+        <div class="gc-footer">
+          <h3>LIMBO</h3>
+          <p>PLAYSTAKE ORIGINALS</p>
+          <div class="gc-players">🟢 1,556 playing</div>
+        </div>
+      </div>
+
+      <!-- Game Card 2 -->
+      <div class="game-card" onclick="location.href='games/flip.html'">
+        <div class="gc-img bg-flip">
+           <div class="gc-content"><span>🟡</span></div>
+        </div>
+        <div class="gc-footer">
+          <h3>FLIP</h3>
+          <p>PLAYSTAKE ORIGINALS</p>
+          <div class="gc-players">🟢 175 playing</div>
+        </div>
+      </div>
+
+      <!-- Game Card 3 -->
+      <div class="game-card" onclick="location.href='games/keno.html'">
+        <div class="gc-img bg-keno">
+           <div class="gc-content"><span>8</span></div>
+        </div>
+        <div class="gc-footer">
+          <h3>KENO</h3>
+          <p>PLAYSTAKE ORIGINALS</p>
+          <div class="gc-players">🟢 1,281 playing</div>
+        </div>
+      </div>
+
+      <!-- Game Card 4 -->
+      <div class="game-card" onclick="location.href='games/plinko.html'">
+        <div class="gc-img bg-plinko">
+           <div class="gc-content"><span>10000x</span></div>
+        </div>
+        <div class="gc-footer">
+          <h3>PLINKO</h3>
+          <p>PLAYSTAKE ORIGINALS</p>
+          <div class="gc-players">🟢 1,010 playing</div>
+        </div>
+      </div>
+
+      <!-- Game Card 5 -->
+      <div class="game-card" onclick="location.href='games/mines.html'">
+        <div class="gc-img bg-mines">
+           <div class="gc-content"><span>💎</span></div>
+        </div>
+        <div class="gc-footer">
+          <h3>MINES</h3>
+          <p>PLAYSTAKE ORIGINALS</p>
+          <div class="gc-players">🟢 2,381 playing</div>
+        </div>
+      </div>
+
+      <!-- Game Card 6 -->
+      <div class="game-card" onclick="location.href='games/dragontower.html'">
+        <div class="gc-img bg-dragon">
+           <div class="gc-content"><span>🐉</span></div>
+        </div>
+        <div class="gc-footer">
+          <h3>DRAGON TOWER</h3>
+          <p>PLAYSTAKE ORIGINALS</p>
+          <div class="gc-players">🟢 341 playing</div>
+        </div>
+      </div>
+
+      <!-- Game Card 7 -->
+      <div class="game-card" onclick="location.href='games/blackjack.html'">
+        <div class="gc-img bg-blackjack">
+           <div class="gc-content"><span>♠️♥️</span></div>
+        </div>
+        <div class="gc-footer">
+          <h3>BLACKJACK</h3>
+          <p>PLAYSTAKE ORIGINALS</p>
+          <div class="gc-players">🟢 1,066 playing</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Deposit Modal (Unchanged) -->
 <div class="modal-overlay" id="depositModal">
   <div class="modal">
     <div class="modal-head">
       <h2>Deposit USDT</h2>
       <button class="close" onclick="closeDeposit()">✕</button>
     </div>
-
     <div class="modal-body">
       <label class="lbl">Network</label>
       <select id="networkSelect" class="input">
@@ -50,28 +236,24 @@
         <option>BEP20 (BSC)</option>
         <option>Polygon</option>
       </select>
-
       <label class="lbl">Deposit address</label>
       <div class="addr-row">
         <code id="fakeAddress">TXk9...fake...9Qz</code>
         <button class="btn ghost small" onclick="copyAddress()">Copy</button>
       </div>
-
       <div class="qr-wrap">
         <canvas id="qrCanvas" width="140" height="140"></canvas>
         <p class="muted tiny">Scan (fake) — this is a placeholder QR</p>
       </div>
-
       <label class="lbl">Amount to credit (USDT)</label>
       <input type="number" id="depositAmount" class="input" placeholder="e.g. 1000" min="0.01" step="0.01" />
-
       <button class="btn wide" onclick="confirmDeposit()">I've paid — Confirm deposit</button>
       <p class="muted tiny center">Fake deposit: the amount you enter is credited instantly.</p>
     </div>
   </div>
 </div>
 
-<!-- Wallet / History Modal -->
+<!-- Wallet Modal (Unchanged) -->
 <div class="modal-overlay" id="walletModal">
   <div class="modal wide-modal">
     <div class="modal-head">
@@ -84,10 +266,8 @@
         <div class="stat"><span id="statWagered">0.00</span><small>Wagered</small></div>
         <div class="stat"><span id="statProfit">0.00</span><small>Net profit</small></div>
       </div>
-
       <h3 class="hist-title">Bet history</h3>
       <div class="history-list" id="historyList"></div>
-
       <div class="wallet-actions">
         <button class="btn ghost small" onclick="resetBalance()">Reset balance to 0</button>
         <button class="btn ghost small" onclick="clearHistory()">Clear history</button>
@@ -98,28 +278,24 @@
 
 <script src="app.js"></script>
 <script>
-  const GAMES = [
-    { id:'dice', name:'Dice', desc:'Roll under or over your target.' },
-    { id:'limbo', name:'Limbo', desc:'Set a multiplier and hope it hits.' },
-    { id:'mines', name:'Mines', desc:'Reveal gems, avoid the mines.' },
-    { id:'plinko', name:'Plinko', desc:'Drop the ball, chase the multipliers.' },
-    { id:'keno', name:'Keno', desc:'Pick numbers and match the draw.' },
-    { id:'wheel', name:'Wheel', desc:'Spin for multiplier segments.' },
-    { id:'blackjack', name:'Blackjack', desc:'Beat the dealer to 21.' },
-    { id:'baccarat', name:'Baccarat', desc:'Bet on player, banker or tie.' },
-    { id:'videopoker', name:'Video Poker', desc:'Jacks or better draw.' },
-    { id:'dragontower', name:'Dragon Tower', desc:'Climb the tower, avoid the dragon.' },
-    { id:'roulette', name:'Roulette', desc:'Classic European roulette.' },
-    { id:'diamondpoker', name:'Diamond Poker', desc:'Simple diamond card duel.' }
-  ];
-  const grid = document.getElementById('gameGrid');
-  GAMES.forEach(g => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.onclick = () => location.href = 'games/' + g.id + '.html';
-    card.innerHTML = `<h3>${g.name}</h3><p>${g.desc}</p>`;
-    grid.appendChild(card);
-  });
+  // Sidebar toggle logic
+  let sidebarOpen = true;
+  function toggleSidebar() {
+    sidebarOpen = !sidebarOpen;
+    const sb = document.getElementById('sidebar');
+    const sbMini = document.getElementById('sidebarMini');
+    const main = document.getElementById('mainWrapper');
+    
+    if(sidebarOpen) {
+      sb.style.display = 'flex';
+      sbMini.style.display = 'none';
+      main.style.marginLeft = '220px';
+    } else {
+      sb.style.display = 'none';
+      sbMini.style.display = 'flex';
+      main.style.marginLeft = '70px';
+    }
+  }
 </script>
 </body>
 </html>
