@@ -1,10 +1,30 @@
 /* ============ PlayStake shared logic ============ */
 const STORE_KEY = 'playstake_v1';
 
+// VIP Levels mapped out from Stake
+const VIP_LEVELS = [
+  { name: 'Non-VIP', threshold: 0, icon: '⭐' },
+  { name: 'Bronze', threshold: 10000, icon: '🥉' },
+  { name: 'Silver', threshold: 50000, icon: '🥈' },
+  { name: 'Gold', threshold: 100000, icon: '🥇' },
+  { name: 'Platinum I', threshold: 250000, icon: '💎' },
+  { name: 'Platinum II', threshold: 500000, icon: '💎' },
+  { name: 'Platinum III', threshold: 1000000, icon: '💎' },
+  { name: 'Platinum IV', threshold: 2500000, icon: '💎' },
+  { name: 'Platinum V', threshold: 5000000, icon: '💎' },
+  { name: 'Platinum VI', threshold: 10000000, icon: '💎' },
+  { name: 'Diamond I', threshold: 25000000, icon: '💠' },
+  { name: 'Diamond II', threshold: 50000000, icon: '💠' },
+  { name: 'Diamond III', threshold: 100000000, icon: '💠' },
+  { name: 'Diamond IV', threshold: 250000000, icon: '💠' },
+  { name: 'Diamond V', threshold: 500000000, icon: '💠' },
+  { name: 'Obsidian', threshold: 1000000000, icon: '🖤' }
+];
+
 const defaultState = {
   balance: 0,             // USDT
   bets: 0,
-  wagered: 0,
+  wagered: 0,             // This tracks total lifetime wagered for VIP
   profit: 0,
   history: [],            // {game, amount, payout, win, time}
   seeds: {}
@@ -24,17 +44,73 @@ function saveState(){
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
   renderBalance();
   renderStats();
+  updateVIPProgress(); // Update VIP UI whenever state saves
 }
 
 /* ---------- Balance ---------- */
 function renderBalance(){
   const el = document.getElementById('balanceDisplay');
-  if(el) el.textContent = Number(state.balance).toFixed(2);
+  if(el) el.textContent = Number(state.balance).toFixed(8); // 8 decimals like Stake
 }
 
 function setBalance(v){
   state.balance = Math.max(0, Number(v));
   saveState();
+}
+
+/* ---------- VIP Progress Logic ---------- */
+function updateVIPProgress() {
+  const totalWagered = state.wagered;
+  
+  // Find current level
+  let currentLevelIdx = 0;
+  for (let i = VIP_LEVELS.length - 1; i >= 0; i--) {
+    if (totalWagered >= VIP_LEVELS[i].threshold) {
+      currentLevelIdx = i;
+      break;
+    }
+  }
+  
+  const currentLevel = VIP_LEVELS[currentLevelIdx];
+  const nextLevel = VIP_LEVELS[currentLevelIdx + 1];
+  
+  // Update DOM elements
+  const elName = document.getElementById('vipName');
+  const elPercent = document.getElementById('vipPercentage');
+  const elFill = document.getElementById('vipProgressFill');
+  const elCurrentLvl = document.getElementById('vipCurrentLevel');
+  const elNextLvl = document.getElementById('vipNextLevel');
+  const elBadge = document.getElementById('vipBadge');
+  const elWageredText = document.getElementById('vipWageredText');
+  const elNextThresholdText = document.getElementById('vipNextThresholdText');
+  
+  if(!elName) return; // Exit if elements aren't on page (e.g., on a game page)
+
+  elName.textContent = currentLevel.name;
+  elBadge.textContent = currentLevel.icon;
+  elCurrentLvl.textContent = currentLevel.name;
+  elWageredText.textContent = `$${totalWagered.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} Wagered`;
+  
+  if (!nextLevel) {
+    // Max level reached
+    elPercent.textContent = '100%';
+    elFill.style.width = '100%';
+    elNextLvl.textContent = 'MAX';
+    elNextThresholdText.textContent = 'Max VIP Level Reached';
+  } else {
+    // Calculate progress towards next level
+    // Stake formula: (Total Wagered - Current Threshold) / (Next Threshold - Current Threshold) * 100
+    const range = nextLevel.threshold - currentLevel.threshold;
+    const progressInRange = totalWagered - currentLevel.threshold;
+    const percentage = (progressInRange / range) * 100;
+    
+    elPercent.textContent = `${percentage.toFixed(2)}%`;
+    elFill.style.width = `${percentage}%`;
+    elNextLvl.textContent = nextLevel.name;
+    
+    const remaining = nextLevel.threshold - totalWagered;
+    elNextThresholdText.textContent = `$${remaining.toLocaleString(undefined, {maximumFractionDigits: 0})} to ${nextLevel.name}`;
+  }
 }
 
 /* ---------- Deposit ---------- */
@@ -114,14 +190,14 @@ function resetBalance(){
 }
 function clearHistory(){
   state.history = []; state.bets=0; state.wagered=0; state.profit=0;
-  saveState(); renderHistory(); flash('History cleared');
+  saveState(); renderHistory(); updateVIPProgress(); flash('History cleared');
 }
 
 /* ---------- Bet settlement (used by games) ---------- */
 /* Call: recordBet({game:'Dice', amount:10, payout:20, win:true}) */
 function recordBet({game, amount, payout, win}){
   state.bets += 1;
-  state.wagered += amount;
+  state.wagered += amount; // This feeds the VIP progress bar
   state.profit += (payout - amount);
   state.history.unshift({game, amount, payout, win, time:Date.now()});
   if(state.history.length > 200) state.history.pop();
@@ -185,7 +261,7 @@ function flash(msg){
   if(!t){
     t = document.createElement('div');
     t.id='toast';
-    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#00e701;color:#04140a;font-weight:800;padding:12px 22px;border-radius:10px;z-index:100;font-size:.9rem;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:.2s;opacity:0';
+    t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#00e701;color:#04140a;font-weight:800;padding:12px 22px;border-radius:10px;z-index:100;font-size:.9rem;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:.2s;opacity:0';
     document.body.appendChild(t);
   }
   t.textContent = msg;
@@ -207,7 +283,6 @@ function drawQR(){
       if(Math.random() > 0.5) ctx.fillRect(x*cell, y*cell, cell, cell);
     }
   }
-  // corner squares to look QR-ish
   [[0,0],[size-7,0],[0,size-7]].forEach(([ox,oy])=>{
     ctx.fillStyle='#fff'; ctx.fillRect(ox*cell,oy*cell,7*cell,7*cell);
     ctx.fillStyle='#000'; ctx.fillRect(ox*cell,oy*cell,7*cell,7*cell);
@@ -220,4 +295,5 @@ function drawQR(){
 document.addEventListener('DOMContentLoaded', ()=>{
   renderBalance();
   renderStats();
+  updateVIPProgress();
 });
