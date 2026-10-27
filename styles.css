@@ -9,6 +9,7 @@
   --border:#2a3a4d;
   --gold:#ffd166;
   --danger:#ff4d4d;
+  --usdt:#26A17B;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -34,7 +35,7 @@ a{color:var(--accent);text-decoration:none}
   display:flex;align-items:center;gap:8px;background:var(--panel2);
   padding:9px 16px;border-radius:10px;font-weight:700;
 }
-.balance-pill .coin{color:var(--gold)}
+.balance-pill .coin{color:var(--usdt)}
 .balance-pill .cur{color:var(--muted);font-size:.78rem}
 
 /* Buttons */
@@ -80,10 +81,6 @@ a{color:var(--accent);text-decoration:none}
 .card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,231,1,.08)}
 .card h3{font-size:1.1rem;margin-bottom:6px}
 .card p{font-size:.82rem;color:var(--muted)}
-.card-tag{
-  position:absolute;top:12px;right:12px;font-size:.62rem;font-weight:800;
-  background:var(--accent);color:#04140a;padding:3px 8px;border-radius:6px;
-}
 
 /* Modal */
 .modal-overlay{
