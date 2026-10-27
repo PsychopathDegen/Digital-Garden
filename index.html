@@ -2,226 +2,189 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>PlayStake — Play Money Casino</title>
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- Left Sidebar -->
-<aside class="sidebar" id="sidebar">
-  <div class="sb-top">
-    <button class="icon-btn" id="menuBtn" onclick="toggleSidebar()">☰</button>
-    <div class="sb-tabs">
-      <button class="tab active">Casino</button>
-      <button class="tab">Sports</button>
-    </div>
+<!-- Slide-out Menu Drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <button class="icon-btn" onclick="toggleMenu()">✕</button>
+    <div class="brand" style="font-size: 1.5rem; margin-left: 10px;">Play<span>Stake</span></div>
   </div>
   
-  <div class="sb-menu">
-    <a href="#" class="sb-link">🏷️ Promotions <span>⌄</span></a>
-    <a href="#" class="sb-link">🏆 Challenges</a>
-    <a href="#" class="sb-link">🤝 Affiliate</a>
-    <a href="#" class="sb-link">👑 VIP Club</a>
-    <a href="#" class="sb-link">📝 Blog</a>
-    <a href="#" class="sb-link">💬 Forum</a>
-    <div class="sb-divider"></div>
-    <a href="#" class="sb-link">🤝 Sponsorships <span>⌄</span></a>
-    <a href="#" class="sb-link">🛡️ Responsible Gambling</a>
-    <a href="#" class="sb-link">🎧 Live Support</a>
-    <a href="#" class="sb-link">🌐 Language: English <span>⌄</span></a>
+  <div class="drawer-tabs">
+    <button class="drawer-tab active">Casino</button>
+    <button class="drawer-tab">Sports</button>
+  </div>
+
+  <div class="drawer-links">
+    <a href="#">🎁 Promotions <span>⌄</span></a>
+    <a href="#">🏔️ Challenges</a>
+    <a href="#">🤝 Affiliate</a>
+    <a href="#">👑 VIP Club</a>
+    <a href="#">📝 Blog</a>
+    <a href="#">💬 Forum</a>
+    <div class="divider"></div>
+    <a href="#">🤝 Sponsorships <span>⌄</span></a>
+    <a href="#">🛡️ Responsible Gambling</a>
+    <a href="#">🎧 Live Support</a>
+    <a href="#">🌐 Language: English <span>⌄</span></a>
   </div>
 </aside>
 
-<!-- Collapsed Sidebar (Icons only) -->
-<aside class="sidebar-mini" id="sidebarMini">
-  <button class="icon-btn" onclick="toggleSidebar()">☰</button>
-  <a href="#" class="mini-icon">🏷️</a>
-  <a href="#" class="mini-icon">🏆</a>
-  <a href="#" class="mini-icon">🤝</a>
-  <a href="#" class="mini-icon">👑</a>
-  <a href="#" class="mini-icon">📝</a>
-  <a href="#" class="mini-icon">💬</a>
-  <div class="sb-divider"></div>
-  <a href="#" class="mini-icon">🛡️</a>
-  <a href="#" class="mini-icon">🎧</a>
-</aside>
+<!-- Main Mobile Layout -->
+<div class="app-container">
 
-<!-- Main Content Area -->
-<div class="main-wrapper" id="mainWrapper">
-  
-  <!-- Top Navbar -->
+  <!-- Top Header -->
   <header class="topbar">
-    <div class="brand" onclick="location.href='index.html'">
-      Play<span>Stake</span>
-    </div>
+    <div class="brand" onclick="location.href='index.html'">S</div>
     
-    <div class="top-center">
-      <div class="balance-pill">
-        <span id="balanceDisplay">0.00000000</span>
-        <span class="coin">₮</span>
-        <span class="dropdown-arrow">⌄</span>
-      </div>
-      <button class="btn wallet-btn" onclick="openWallet()">Wallet</button>
+    <div class="balance-pill" onclick="openDeposit()">
+      <span id="balanceDisplay">0.00000000</span>
+      <span class="coin">₮</span>
+      <span class="dropdown-arrow">⌄</span>
     </div>
 
-    <div class="top-right">
-      <button class="icon-btn">🔍</button>
+    <div class="top-actions">
+      <button class="icon-btn wallet-blue" onclick="openWallet()">💼</button>
       <button class="icon-btn">👤</button>
       <button class="icon-btn">🔔</button>
-      <button class="icon-btn">💬</button>
     </div>
   </header>
 
-  <div class="banner">Play money only — for fun. No real money, no real crypto.</div>
-
+  <!-- Scrollable Content -->
   <main class="content-area">
-    
-    <!-- Hero Banners -->
-    <div class="hero-grid">
-      <div class="hero-card casino-hero">
-        <div class="hero-text">
-          <h2>CASINO</h2>
-        </div>
-        <div class="hero-img-placeholder">🎲 🎰</div>
-        <div class="hero-footer">
-          <span>▶ Play Now</span>
-          <span class="live-dot">🟢 35,832 playing</span>
-        </div>
-      </div>
-      <div class="hero-card sports-hero">
-        <div class="hero-text">
-          <h2>SPORTS</h2>
-        </div>
-        <div class="hero-img-placeholder">⚽ 🏁</div>
-        <div class="hero-footer">
-          <span>⚽ Bet Now</span>
-          <span class="live-dot">🟢 19,541 betting</span>
-        </div>
-      </div>
-    </div>
 
     <!-- Search Bar -->
-    <div class="search-bar-wrap">
-      <div class="search-bar">
-        <span>🔍</span>
-        <input type="text" placeholder="Search PlayStake.com" />
-        <span class="search-shortcut">Ctrl+K</span>
-      </div>
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" placeholder="Search PlayStake.com" />
+      <button class="icon-btn" onclick="toggleMenu()">✕</button>
     </div>
 
-    <!-- VIP Progress -->
+    <!-- VIP Progress Section (Updated to Stake Logic) -->
     <div class="vip-section">
-      <div class="section-title">🏆 VIP Progress <span>›</span></div>
-      <div class="vip-bar-container">
-        <div class="vip-badge">⭐</div>
-        <div class="vip-info">
-          <div class="vip-name">IsaiahTol <span>›</span></div>
-          <div class="vip-progress-track">
-            <div class="vip-progress-fill" style="width: 87%;"></div>
-          </div>
-          <div class="vip-levels">
-            <span>Platinum II</span>
-            <span>87.65%</span>
-            <span>Platinum III</span>
-          </div>
-        </div>
+      <div class="section-header">
+        <h2>🏆 VIP Progress <span>›</span></h2>
       </div>
-    </div>
-
-    <!-- Continue Playing -->
-    <div class="section-title">▶ Continue Playing <span>›</span></div>
-    <div class="games-row">
       
-      <!-- Game Card 1 -->
-      <div class="game-card" onclick="location.href='games/limbo.html'">
-        <div class="gc-img bg-limbo">
-          <div class="gc-content"><span>900x</span></div>
-        </div>
-        <div class="gc-footer">
-          <h3>LIMBO</h3>
-          <p>PLAYSTAKE ORIGINALS</p>
-          <div class="gc-players">🟢 1,556 playing</div>
-        </div>
-      </div>
-
-      <!-- Game Card 2 -->
-      <div class="game-card" onclick="location.href='games/flip.html'">
-        <div class="gc-img bg-flip">
-           <div class="gc-content"><span>🟡</span></div>
-        </div>
-        <div class="gc-footer">
-          <h3>FLIP</h3>
-          <p>PLAYSTAKE ORIGINALS</p>
-          <div class="gc-players">🟢 175 playing</div>
-        </div>
-      </div>
-
-      <!-- Game Card 3 -->
-      <div class="game-card" onclick="location.href='games/keno.html'">
-        <div class="gc-img bg-keno">
-           <div class="gc-content"><span>8</span></div>
-        </div>
-        <div class="gc-footer">
-          <h3>KENO</h3>
-          <p>PLAYSTAKE ORIGINALS</p>
-          <div class="gc-players">🟢 1,281 playing</div>
+      <div class="vip-bar-container">
+        <div class="vip-badge" id="vipBadge">⭐</div>
+        <div class="vip-info">
+          <div class="vip-name-row">
+            <span id="vipName">Non-VIP</span>
+            <span id="vipPercentage">0.00%</span>
+          </div>
+          
+          <!-- The Progress Bar -->
+          <div class="vip-progress-track">
+            <div class="vip-progress-fill" id="vipProgressFill" style="width: 0%;"></div>
+          </div>
+          
+          <!-- Level Labels -->
+          <div class="vip-levels">
+            <span id="vipCurrentLevel">Non-VIP</span>
+            <span id="vipNextLevel">Bronze</span>
+          </div>
+          
+          <!-- Wager Amount Info -->
+          <div class="vip-wager-info">
+            <span id="vipWageredText">$0.00 Wagered</span>
+            <span id="vipNextThresholdText">$10,000 to next level</span>
+          </div>
         </div>
       </div>
-
-      <!-- Game Card 4 -->
-      <div class="game-card" onclick="location.href='games/plinko.html'">
-        <div class="gc-img bg-plinko">
-           <div class="gc-content"><span>10000x</span></div>
-        </div>
-        <div class="gc-footer">
-          <h3>PLINKO</h3>
-          <p>PLAYSTAKE ORIGINALS</p>
-          <div class="gc-players">🟢 1,010 playing</div>
-        </div>
-      </div>
-
-      <!-- Game Card 5 -->
-      <div class="game-card" onclick="location.href='games/mines.html'">
-        <div class="gc-img bg-mines">
-           <div class="gc-content"><span>💎</span></div>
-        </div>
-        <div class="gc-footer">
-          <h3>MINES</h3>
-          <p>PLAYSTAKE ORIGINALS</p>
-          <div class="gc-players">🟢 2,381 playing</div>
-        </div>
-      </div>
-
-      <!-- Game Card 6 -->
-      <div class="game-card" onclick="location.href='games/dragontower.html'">
-        <div class="gc-img bg-dragon">
-           <div class="gc-content"><span>🐉</span></div>
-        </div>
-        <div class="gc-footer">
-          <h3>DRAGON TOWER</h3>
-          <p>PLAYSTAKE ORIGINALS</p>
-          <div class="gc-players">🟢 341 playing</div>
-        </div>
-      </div>
-
-      <!-- Game Card 7 -->
-      <div class="game-card" onclick="location.href='games/blackjack.html'">
-        <div class="gc-img bg-blackjack">
-           <div class="gc-content"><span>♠️♥️</span></div>
-        </div>
-        <div class="gc-footer">
-          <h3>BLACKJACK</h3>
-          <p>PLAYSTAKE ORIGINALS</p>
-          <div class="gc-players">🟢 1,066 playing</div>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Section: Originals -->
+    <div class="section-header">
+      <h2>🔥 PlayStake Originals <span>›</span></h2>
+    </div>
+
+    <div class="games-grid">
+      <!-- Game 1 -->
+      <div class="game-card" onclick="location.href='games/dice.html'">
+        <div class="gc-img bg-dice"><div class="gc-content">🎲</div></div>
+        <h3>DICE</h3>
+        <p>PLAYSTAKE ORIGINALS</p>
+        <div class="gc-players">🟢 2,012 playing</div>
+      </div>
+      
+      <!-- Game 2 -->
+      <div class="game-card" onclick="location.href='games/mines.html'">
+        <div class="gc-img bg-mines"><div class="gc-content">💎</div></div>
+        <h3>MINES</h3>
+        <p>PLAYSTAKE ORIGINALS</p>
+        <div class="gc-players">🟢 2,207 playing</div>
+      </div>
+
+      <!-- Game 3 -->
+      <div class="game-card" onclick="location.href='games/plinko.html'">
+        <div class="gc-img bg-plinko"><div class="gc-content">🟠</div></div>
+        <h3>PLINKO</h3>
+        <p>PLAYSTAKE ORIGINALS</p>
+        <div class="gc-players">🟢 1,012 playing</div>
+      </div>
+
+      <!-- Game 4 -->
+      <div class="game-card" onclick="location.href='games/blackjack.html'">
+        <div class="gc-img bg-blackjack"><div class="gc-content">♠️</div></div>
+        <h3>BLACKJACK</h3>
+        <p>PLAYSTAKE ORIGINALS</p>
+        <div class="gc-players">🟢 1,019 playing</div>
+      </div>
+
+      <!-- Game 5 -->
+      <div class="game-card" onclick="location.href='games/limbo.html'">
+        <div class="gc-img bg-limbo"><div class="gc-content">900x</div></div>
+        <h3>LIMBO</h3>
+        <p>PLAYSTAKE ORIGINALS</p>
+        <div class="gc-players">🟢 1,490 playing</div>
+      </div>
+
+      <!-- Game 6 -->
+      <div class="game-card" onclick="location.href='games/keno.html'">
+        <div class="gc-img bg-keno"><div class="gc-content">8</div></div>
+        <h3>KENO</h3>
+        <p>PLAYSTAKE ORIGINALS</p>
+        <div class="gc-players">🟢 1,248 playing</div>
+      </div>
+    </div>
+    
+    <div class="load-more">Load More</div>
+
   </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item">
+      <span class="nav-icon">📊</span>
+      <span>Browse</span>
+    </a>
+    <a href="#" class="nav-item active">
+      <span class="nav-icon">🎰</span>
+      <span>Casino</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">✨</span>
+      <span>For You</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚽</span>
+      <span>Sports</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">💬</span>
+      <span>Chat</span>
+    </a>
+  </nav>
 </div>
 
-<!-- Deposit Modal (Unchanged) -->
+<!-- Deposit Modal -->
 <div class="modal-overlay" id="depositModal">
   <div class="modal">
     <div class="modal-head">
@@ -248,12 +211,11 @@
       <label class="lbl">Amount to credit (USDT)</label>
       <input type="number" id="depositAmount" class="input" placeholder="e.g. 1000" min="0.01" step="0.01" />
       <button class="btn wide" onclick="confirmDeposit()">I've paid — Confirm deposit</button>
-      <p class="muted tiny center">Fake deposit: the amount you enter is credited instantly.</p>
     </div>
   </div>
 </div>
 
-<!-- Wallet Modal (Unchanged) -->
+<!-- Wallet Modal -->
 <div class="modal-overlay" id="walletModal">
   <div class="modal wide-modal">
     <div class="modal-head">
@@ -278,22 +240,16 @@
 
 <script src="app.js"></script>
 <script>
-  // Sidebar toggle logic
-  let sidebarOpen = true;
-  function toggleSidebar() {
-    sidebarOpen = !sidebarOpen;
-    const sb = document.getElementById('sidebar');
-    const sbMini = document.getElementById('sidebarMini');
-    const main = document.getElementById('mainWrapper');
-    
-    if(sidebarOpen) {
-      sb.style.display = 'flex';
-      sbMini.style.display = 'none';
-      main.style.marginLeft = '220px';
+  // Drawer toggle logic
+  function toggleMenu() {
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('drawerOverlay');
+    if (drawer.classList.contains('open')) {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
     } else {
-      sb.style.display = 'none';
-      sbMini.style.display = 'flex';
-      main.style.marginLeft = '70px';
+      drawer.classList.add('open');
+      overlay.classList.add('open');
     }
   }
 </script>
