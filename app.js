@@ -1,4 +1,3 @@
-
 const STORAGE_KEY = "vaultplay-account-v1";
 
 // ===================================
@@ -258,7 +257,11 @@ function initializeFavorites() {
 
         updateFavoriteButton();
 
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (event) => {
+
+            // Stop the click from following the card's <a href>
+            event.preventDefault();
+            event.stopPropagation();
 
             const index =
                 state.favorites.indexOf(gameName);
