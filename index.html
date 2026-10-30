@@ -1,201 +1,309 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101419">
-  <title>VaultPlay — Originals Casino</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101216">
+    <title>VaultPlay — Casino</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
 </head>
+
 <body>
 
-  <header class="topbar">
-    <button class="mobile-menu" id="mobile-menu" aria-label="Open menu">☰</button>
+<div class="app">
 
-    <a class="brand" href="#" data-page="casino">
-      <span class="brand-mark">V</span>
-      <span>VAULT<span class="brand-green">PLAY</span></span>
-    </a>
-
-    <div class="header-search">
-      <span>⌕</span>
-      <input id="search-input" type="search" placeholder="Search games...">
-      <kbd>/</kbd>
-    </div>
-
-    <div class="header-actions">
-      <div class="wallet-display">
-        <span class="wallet-icon">◈</span>
-        <strong id="header-balance">0.00</strong>
-        <small>USDT</small>
-      </div>
-      <button class="btn-deposit" id="open-deposit">＋ Deposit</button>
-    </div>
-  </header>
-
-  <div class="app-layout">
-
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-label">MENU</div>
-        <button class="nav-item active" data-page="casino">
-          <span>⌂</span> Casino
-        </button>
-        <button class="nav-item" data-page="originals">
-          <span>♛</span> Originals
-        </button>
-        <button class="nav-item" data-page="favorites">
-          <span>♡</span> Favorites
-        </button>
-        <button class="nav-item" data-page="history">
-          <span>◷</span> Bet History
-        </button>
-      </div>
 
-      <div class="sidebar-section">
-        <div class="sidebar-label">GAME CATEGORIES</div>
-        <button class="nav-item category-nav" data-category="all">
-          <span>▦</span> All games
-        </button>
-        <button class="nav-item category-nav" data-category="instant">
-          <span>⚡</span> Instant games
-        </button>
-        <button class="nav-item category-nav" data-category="table">
-          <span>♠</span> Table games
-        </button>
-        <button class="nav-item category-nav" data-category="slots">
-          <span>✦</span> Special games
-        </button>
-      </div>
+        <a href="index.html" class="brand">
+            <span class="brand-mark">V</span>
+            <span>VAULT<span class="brand-green">PLAY</span></span>
+        </a>
 
-      <div class="sidebar-bottom">
-        <div class="demo-notice">
-          <span class="demo-dot"></span>
-          <div>
-            <strong>Demo mode</strong>
-            <small>Virtual USDT only</small>
-          </div>
+        <div class="sidebar-section">
+            <div class="sidebar-heading">MENU</div>
+
+            <button class="nav-item active" data-filter="all">
+                <span class="nav-icon">⌂</span>
+                <span>Lobby</span>
+            </button>
+
+            <button class="nav-item" data-filter="favorites">
+                <span class="nav-icon">♡</span>
+                <span>Favorites</span>
+            </button>
+
+            <button class="nav-item" data-filter="originals">
+                <span class="nav-icon">◆</span>
+                <span>Originals</span>
+            </button>
+
+            <button class="nav-item" data-filter="table">
+                <span class="nav-icon">♠</span>
+                <span>Table Games</span>
+            </button>
         </div>
-        <div class="sidebar-version">VAULTPLAY v1.0</div>
-      </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-heading">YOUR ACCOUNT</div>
+
+            <button class="nav-item" id="openWallet">
+                <span class="nav-icon">▣</span>
+                <span>Demo Wallet</span>
+            </button>
+
+            <button class="nav-item" id="historyButton">
+                <span class="nav-icon">◷</span>
+                <span>Bet History</span>
+            </button>
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="demo-label">
+                <span class="status-dot"></span>
+                DEMO ENVIRONMENT
+            </div>
+            <p>VaultPlay is a virtual-credit casino simulator. No real money is involved.</p>
+        </div>
+
     </aside>
 
+
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
-      <section class="welcome-banner">
-        <div class="welcome-content">
-          <div class="welcome-tag">THE ORIGINALS COLLECTION</div>
-          <h1>Welcome to <span>VaultPlay.</span></h1>
-          <p>Play your favorite originals. Every round is yours to explore.</p>
-          <button class="banner-button" id="explore-games">
-            Explore games <span>→</span>
-          </button>
-        </div>
-        <div class="banner-art" aria-hidden="true">
-          <div class="art-circle circle-one"></div>
-          <div class="art-circle circle-two"></div>
-          <div class="art-diamond">◆</div>
-          <div class="art-glow"></div>
-        </div>
-      </section>
+        <!-- TOP BAR -->
+        <header class="topbar">
 
-      <div class="content-heading" id="games-heading">
-        <div>
-          <div class="section-eyebrow">VAULTPLAY EXCLUSIVES</div>
-          <h2 id="page-title">Originals</h2>
-          <p id="page-subtitle">Explore our collection of original games.</p>
+            <button class="mobile-menu" id="mobileMenu" aria-label="Open menu">
+                ☰
+            </button>
+
+            <div class="search-box">
+                <span>⌕</span>
+                <input
+                    type="search"
+                    id="gameSearch"
+                    placeholder="Search games..."
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="balance-display">
+                    <span class="balance-symbol">◈</span>
+                    <span id="topBalance">1,000.00</span>
+                    <span class="currency">USDT</span>
+                </div>
+
+                <button class="wallet-button" id="topWallet">
+                    Wallet
+                </button>
+
+                <div class="profile-avatar">V</div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content">
+
+            <div class="page-heading">
+                <div>
+                    <div class="eyebrow">WELCOME TO VAULTPLAY</div>
+                    <h1>Casino</h1>
+                    <p class="subheading">Your games. Your experience.</p>
+                </div>
+
+                <div class="online-indicator">
+                    <span class="status-dot"></span>
+                    Demo mode
+                </div>
+            </div>
+
+
+            <!-- FEATURED GAME -->
+            <section class="featured-section">
+
+                <div class="featured-card">
+
+                    <div class="featured-info">
+                        <span class="featured-tag">VAULTPLAY ORIGINAL</span>
+
+                        <h2>PLINKO</h2>
+
+                        <p>
+                            Drop the ball. Watch it bounce.
+                            Discover your multiplier.
+                        </p>
+
+                        <a href="games/plinko.html" class="play-button">
+                            Play Plinko <span>→</span>
+                        </a>
+                    </div>
+
+                    <div class="featured-art">
+                        <div class="featured-glow"></div>
+                        <div class="featured-ball"></div>
+                        <div class="featured-peg peg-one"></div>
+                        <div class="featured-peg peg-two"></div>
+                        <div class="featured-peg peg-three"></div>
+                        <div class="featured-peg peg-four"></div>
+                        <div class="featured-peg peg-five"></div>
+                        <div class="featured-peg peg-six"></div>
+                        <div class="featured-peg peg-seven"></div>
+                        <div class="featured-peg peg-eight"></div>
+                        <div class="featured-peg peg-nine"></div>
+                        <div class="featured-peg peg-ten"></div>
+                        <div class="featured-peg peg-eleven"></div>
+                        <div class="featured-peg peg-twelve"></div>
+                        <div class="featured-peg peg-thirteen"></div>
+                        <div class="featured-peg peg-fourteen"></div>
+                        <div class="featured-peg peg-fifteen"></div>
+                        <div class="featured-peg peg-sixteen"></div>
+                        <div class="featured-peg peg-seventeen"></div>
+                        <div class="featured-peg peg-eighteen"></div>
+                        <div class="featured-peg peg-nineteen"></div>
+                        <div class="featured-peg peg-twenty"></div>
+                        <div class="featured-peg peg-twentyone"></div>
+                        <div class="featured-peg peg-twentytwo"></div>
+                        <div class="featured-peg peg-twentythree"></div>
+                        <div class="featured-peg peg-twentyfour"></div>
+                        <div class="featured-peg peg-twentyfive"></div>
+                        <div class="featured-peg peg-twentysix"></div>
+                        <div class="featured-peg peg-twentyseven"></div>
+                        <div class="featured-peg peg-twentyeight"></div>
+                        <div class="featured-peg peg-twentynine"></div>
+                        <div class="featured-peg peg-thirty"></div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- GAME CATEGORIES -->
+            <section class="games-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>All Games</h2>
+                        <p>Explore the VaultPlay collection</p>
+                    </div>
+
+                    <div class="game-count" id="gameCount">18 GAMES</div>
+                </div>
+
+
+                <div class="category-tabs">
+
+                    <button class="category-tab active" data-filter="all">
+                        All Games
+                    </button>
+
+                    <button class="category-tab" data-filter="originals">
+                        Originals
+                    </button>
+
+                    <button class="category-tab" data-filter="table">
+                        Table Games
+                    </button>
+
+                    <button class="category-tab" data-filter="favorites">
+                        Favorites
+                    </button>
+
+                </div>
+
+
+                <!-- JAVASCRIPT RENDERS GAME CARDS HERE -->
+                <div class="games-grid" id="gamesGrid"></div>
+
+                <div class="empty-state" id="emptyState" hidden>
+                    <div class="empty-icon">⌕</div>
+                    <h3>No games found</h3>
+                    <p>Try another search or category.</p>
+                </div>
+
+            </section>
+
+
+            <footer class="footer">
+                <div class="footer-brand">VAULT<span>PLAY</span></div>
+                <p>Virtual casino entertainment only. No real-money gambling.</p>
+                <p class="footer-version">VAULTPLAY • DEMO VERSION 1.0</p>
+            </footer>
+
         </div>
-        <div class="game-count" id="game-count">18 GAMES</div>
-      </div>
-
-      <div class="filter-bar" id="filter-bar">
-        <button class="filter-chip selected" data-filter="all">All games</button>
-        <button class="filter-chip" data-filter="instant">Instant</button>
-        <button class="filter-chip" data-filter="table">Table</button>
-        <button class="filter-chip" data-filter="slots">Special</button>
-      </div>
-
-      <section class="game-grid" id="game-grid"></section>
-
-      <section class="empty-state hidden" id="empty-state">
-        <div class="empty-icon">⌕</div>
-        <h3>No games found</h3>
-        <p>Try another search or category.</p>
-        <button class="secondary-button" id="clear-search">Clear search</button>
-      </section>
-
-      <section class="history-section hidden" id="history-section">
-        <div class="history-header">
-          <div>
-            <h2>Bet history</h2>
-            <p>Your recent VaultPlay game activity.</p>
-          </div>
-          <button class="secondary-button" id="clear-history">Clear history</button>
-        </div>
-        <div class="history-table-wrap">
-          <table class="history-table">
-            <thead>
-              <tr>
-                <th>GAME</th>
-                <th>DATE</th>
-                <th>BET</th>
-                <th>MULTIPLIER</th>
-                <th>PAYOUT</th>
-                <th>PROFIT</th>
-              </tr>
-            </thead>
-            <tbody id="history-body"></tbody>
-          </table>
-        </div>
-        <div class="history-empty" id="history-empty">
-          No bets yet. Your game activity will appear here.
-        </div>
-      </section>
-
-      <footer class="site-footer">
-        <div class="footer-brand">VAULT<span>PLAY</span></div>
-        <p>A private entertainment simulator. Virtual balances have no cash value.</p>
-        <span>© 2026 VaultPlay</span>
-      </footer>
 
     </main>
-  </div>
 
-  <!-- Virtual deposit modal -->
-  <div class="modal-overlay hidden" id="deposit-modal">
+</div>
+
+
+<!-- WALLET MODAL -->
+<div class="modal-overlay" id="walletModal">
+
     <div class="modal">
-      <button class="modal-close" id="close-deposit" aria-label="Close">×</button>
-      <div class="modal-icon">◈</div>
-      <div class="modal-eyebrow">VAULTPLAY WALLET</div>
-      <h2>Add virtual funds</h2>
-      <p class="modal-description">
-        Add simulator credits to your VaultPlay balance.
-        No real money or cryptocurrency is involved.
-      </p>
 
-      <label for="deposit-amount">AMOUNT</label>
-      <div class="amount-input-wrap">
-        <input id="deposit-amount" type="number" min="0.01"
-          step="0.01" placeholder="0.00">
-        <span>USDT</span>
-      </div>
+        <button class="modal-close" data-close="walletModal">×</button>
 
-      <div class="quick-amounts">
-        <button data-amount="10">10</button>
-        <button data-amount="50">50</button>
-        <button data-amount="100">100</button>
-        <button data-amount="500">500</button>
-      </div>
+        <div class="modal-icon">◈</div>
 
-      <button class="confirm-deposit" id="confirm-deposit">
-        Add to balance
-      </button>
-      <div class="modal-footnote">SIMULATED FUNDS · NO PAYMENT REQUIRED</div>
+        <h2>Demo Wallet</h2>
+        <p class="modal-description">
+            Your VaultPlay virtual-credit balance.
+        </p>
+
+        <div class="wallet-balance">
+            <span>AVAILABLE BALANCE</span>
+            <strong id="modalBalance">1,000.00 USDT</strong>
+        </div>
+
+        <div class="wallet-notice">
+            This is a simulation. Credits have no cash value and cannot be deposited or withdrawn.
+        </div>
+
+        <button class="primary-button" id="addCredits">
+            Add 1,000 Demo Credits
+        </button>
+
+        <button class="secondary-button" data-close="walletModal">
+            Close
+        </button>
+
     </div>
-  </div>
 
-  <div class="toast-container" id="toast-container"></div>
+</div>
+
+
+<!-- HISTORY MODAL -->
+<div class="modal-overlay" id="historyModal">
+
+    <div class="modal history-modal">
+
+        <button class="modal-close" data-close="historyModal">×</button>
+
+        <h2>Bet History</h2>
+        <p class="modal-description">Your recent virtual-credit activity.</p>
+
+        <div id="historyList" class="history-list">
+            <p class="no-history">No activity yet.</p>
+        </div>
+
+        <button class="secondary-button" data-close="historyModal">
+            Close
+        </button>
+
+    </div>
+
+</div>
 
 </body>
 </html>
