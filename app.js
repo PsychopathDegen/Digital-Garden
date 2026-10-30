@@ -1,548 +1,313 @@
 
-"use strict";
-
 /* =========================================
-   VAULTPLAY - MAIN APPLICATION
+   VAULTPLAY LABORATORY
+   Main application
 ========================================= */
 
-const STORAGE = {
+const STARTING_BALANCE = 0;
+
+const STORAGE_KEYS = {
     balance: "vaultplay_balance_v1",
-    favorites: "vaultplay_favorites_v1",
-    history: "vaultplay_history_v1"
+    history: "vaultplay_history_v1",
+    favorites: "vaultplay_favorites_v1"
 };
-
-const STARTING_BALANCE = 1000;
-
-let balance = Number(localStorage.getItem(STORAGE.balance));
-
-if (!Number.isFinite(balance) || balance < 0) {
-    balance = STARTING_BALANCE;
-}
-
-let favorites = JSON.parse(
-    localStorage.getItem(STORAGE.favorites) || "[]"
-);
-
-let history = JSON.parse(
-    localStorage.getItem(STORAGE.history) || "[]"
-);
-
-let activeFilter = "all";
-let searchTerm = "";
-
 
 /* =========================================
    GAME ARTWORK
 ========================================= */
 
-const artwork = {
+function makeArtwork(type, color = "#00e701", secondary = "#153b20") {
+    const drawings = {
 
-    plinko: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <radialGradient id="plinkoBg">
-                    <stop stop-color="#23552c"/>
-                    <stop offset="1" stop-color="#102219"/>
-                </radialGradient>
-            </defs>
-            <rect width="220" height="135" fill="url(#plinkoBg)"/>
-            <g fill="#a6dca8">
-                <circle cx="95" cy="20" r="3"/><circle cx="125" cy="20" r="3"/>
-                <circle cx="80" cy="40" r="3"/><circle cx="110" cy="40" r="3"/><circle cx="140" cy="40" r="3"/>
-                <circle cx="65" cy="60" r="3"/><circle cx="95" cy="60" r="3"/><circle cx="125" cy="60" r="3"/><circle cx="155" cy="60" r="3"/>
-                <circle cx="50" cy="80" r="3"/><circle cx="80" cy="80" r="3"/><circle cx="110" cy="80" r="3"/><circle cx="140" cy="80" r="3"/><circle cx="170" cy="80" r="3"/>
-                <circle cx="35" cy="100" r="3"/><circle cx="65" cy="100" r="3"/><circle cx="95" cy="100" r="3"/><circle cx="125" cy="100" r="3"/><circle cx="155" cy="100" r="3"/><circle cx="185" cy="100" r="3"/>
+        plinko: `
+            <g fill="#dce9de">
+                ${[0, 1, 2, 3, 4].map(row =>
+                    Array.from({ length: row + 3 }, (_, col) =>
+                        `<circle cx="${100 + col * 25 - row * 12.5}" cy="${35 + row * 23}" r="3.2"/>`
+                    ).join("")
+                ).join("")}
             </g>
-            <circle cx="110" cy="10" r="7" fill="#fff" stroke="#00e701" stroke-width="3"/>
-            <g fill="#00e701">
-                <rect x="26" y="117" width="24" height="10" rx="2"/>
-                <rect x="53" y="117" width="24" height="10" rx="2"/>
-                <rect x="80" y="117" width="24" height="10" rx="2"/>
-                <rect x="107" y="117" width="24" height="10" rx="2"/>
-                <rect x="134" y="117" width="24" height="10" rx="2"/>
-                <rect x="161" y="117" width="24" height="10" rx="2"/>
-            </g>
-        </svg>`,
+            <circle cx="100" cy="28" r="7" fill="${color}"/>
+            <g fill="${color}">
+                <rect x="48" y="145" width="15" height="8" rx="2"/>
+                <rect x="70" y="145" width="15" height="8" rx="2"/>
+                <rect x="92" y="145" width="15" height="8" rx="2"/>
+                <rect x="114" y="145" width="15" height="8" rx="2"/>
+                <rect x="136" y="145" width="15" height="8" rx="2"/>
+            </g>`,
 
-    limbo: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#241638"/>
-            <circle cx="110" cy="68" r="48" fill="#6134a3" opacity=".25"/>
-            <path d="M25 110 L75 72 L112 89 L190 24" fill="none" stroke="#bd8cff" stroke-width="5" stroke-linecap="round"/>
-            <path d="M25 110 L75 72 L112 89 L190 24" fill="none" stroke="#fff" stroke-width="1" opacity=".5"/>
-            <text x="110" y="43" text-anchor="middle" fill="#fff" font-size="24" font-weight="bold">100x</text>
-            <circle cx="190" cy="24" r="7" fill="#cba3ff"/>
-        </svg>`,
+        limbo: `
+            <path d="M100 28 L145 75 L100 122 L55 75 Z" fill="${secondary}" stroke="${color}" stroke-width="3"/>
+            <path d="M100 42 L132 75 L100 108 L68 75 Z" fill="${color}" opacity=".28"/>
+            <text x="100" y="83" text-anchor="middle" font-size="24" font-weight="900" fill="${color}">∞</text>`,
 
-    mines: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#2c2119"/>
-            <g transform="translate(55 14)">
-                ${Array.from({length:25},(_,i)=>{
-                    const x=(i%5)*23, y=Math.floor(i/5)*23;
-                    return `<rect x="${x}" y="${y}" width="19" height="19" rx="4" fill="#59402d" stroke="#805d39"/>`;
-                }).join("")}
-            </g>
-            <circle cx="89" cy="72" r="8" fill="#ffcc54"/>
-            <path d="M89 58 L89 48 M89 96 L89 86 M75 72 L65 72 M113 72 L103 72 M79 62 L71 54 M107 90 L99 82 M99 62 L107 54 M71 90 L79 82" stroke="#ffcc54" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="135" cy="49" r="5" fill="#ffcc54"/>
-        </svg>`,
+        mines: `
+            ${Array.from({ length: 25 }, (_, i) => {
+                const x = 49 + (i % 5) * 25;
+                const y = 37 + Math.floor(i / 5) * 25;
+                const mine = [2, 8, 16, 21].includes(i);
+                return mine
+                    ? `<circle cx="${x}" cy="${y}" r="8" fill="#f05b60"/><path d="M${x-4} ${y-4} L${x+4} ${y+4} M${x+4} ${y-4} L${x-4} ${y+4}" stroke="#fff" stroke-width="2"/>`
+                    : `<rect x="${x-9}" y="${y-9}" width="18" height="18" rx="4" fill="${secondary}" stroke="${color}" stroke-width="1"/><path d="M${x-4} ${y} L${x-1} ${y+3} L${x+5} ${y-4}" fill="none" stroke="${color}" stroke-width="2"/>`;
+            }).join("")}`,
 
-    dice: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#202d39"/>
-            <g transform="translate(48 35) rotate(-13 40 35)">
-                <rect width="68" height="68" rx="12" fill="#e9edf1"/>
-                <g fill="#273444">
-                    <circle cx="17" cy="17" r="5"/><circle cx="51" cy="51" r="5"/><circle cx="17" cy="51" r="5"/><circle cx="51" cy="17" r="5"/>
+        dice: `
+            <g transform="rotate(-12 100 85)">
+                <rect x="53" y="38" width="94" height="94" rx="15" fill="${color}"/>
+                <g fill="#102014">
+                    <circle cx="76" cy="61" r="7"/>
+                    <circle cx="124" cy="61" r="7"/>
+                    <circle cx="100" cy="85" r="7"/>
+                    <circle cx="76" cy="109" r="7"/>
+                    <circle cx="124" cy="109" r="7"/>
                 </g>
+            </g>`,
+
+        keno: `
+            ${Array.from({ length: 16 }, (_, i) => {
+                const x = 53 + (i % 4) * 31;
+                const y = 42 + Math.floor(i / 4) * 31;
+                const active = [1, 3, 6, 9, 14].includes(i);
+                return `<circle cx="${x}" cy="${y}" r="10" fill="${active ? color : secondary}" stroke="${active ? color : "#54705b"}"/><circle cx="${x}" cy="${y}" r="3" fill="${active ? "#102014" : "#9bb19f"}"/>`;
+            }).join("")}`,
+
+        wheel: `
+            <circle cx="100" cy="87" r="62" fill="${secondary}" stroke="${color}" stroke-width="3"/>
+            ${Array.from({ length: 8 }, (_, i) => `<path d="M100 87 L${100 + 60 * Math.cos(i * Math.PI / 4)} ${87 + 60 * Math.sin(i * Math.PI / 4)}" stroke="${color}" stroke-width="2"/>`).join("")}
+            <circle cx="100" cy="87" r="17" fill="${color}"/>
+            <path d="M100 15 L91 29 L109 29 Z" fill="#fff"/>`,
+
+        flip: `
+            <circle cx="100" cy="86" r="57" fill="${color}"/>
+            <circle cx="100" cy="86" r="47" fill="none" stroke="#102014" stroke-width="2"/>
+            <text x="100" y="99" text-anchor="middle" font-size="42" font-weight="900" fill="#102014">₮</text>`,
+
+        tower: `
+            ${Array.from({ length: 5 }, (_, row) => {
+                const count = 5 - row;
+                return Array.from({ length: count }, (_, col) => {
+                    const x = 100 - count * 15 + col * 30;
+                    const y = 36 + row * 23;
+                    return `<rect x="${x-11}" y="${y}" width="22" height="17" rx="4" fill="${(row + col) % 3 === 0 ? color : secondary}" stroke="${color}" stroke-width="1"/>`;
+                }).join("");
+            }).join("")}`,
+
+        diamonds: `
+            <path d="M100 25 L151 78 L100 145 L49 78 Z" fill="${color}" opacity=".8"/>
+            <path d="M100 25 L100 145 M49 78 L151 78 M100 25 L75 78 L100 145 L125 78 Z" fill="none" stroke="#e4ffe7" stroke-width="2"/>`,
+
+        darts: `
+            <circle cx="100" cy="85" r="55" fill="#203e27" stroke="${color}" stroke-width="3"/>
+            <circle cx="100" cy="85" r="35" fill="none" stroke="#b8d7bd" stroke-width="2"/>
+            <circle cx="100" cy="85" r="15" fill="${color}"/>
+            <path d="M143 28 L102 81 L114 93 Z" fill="#e9f2eb"/>
+            <path d="M143 28 L128 22 L138 42 Z" fill="${color}"/>`,
+
+        moles: `
+            <g fill="${secondary}" stroke="${color}" stroke-width="2">
+                <ellipse cx="67" cy="64" rx="21" ry="16"/>
+                <ellipse cx="133" cy="64" rx="21" ry="16"/>
+                <ellipse cx="100" cy="112" rx="21" ry="16"/>
             </g>
-            <g transform="translate(112 28) rotate(12 40 35)">
-                <rect width="68" height="68" rx="12" fill="#00e701"/>
-                <g fill="#102012">
-                    <circle cx="17" cy="17" r="5"/><circle cx="51" cy="51" r="5"/><circle cx="17" cy="51" r="5"/><circle cx="51" cy="17" r="5"/><circle cx="34" cy="34" r="5"/>
-                </g>
-            </g>
-        </svg>`,
+            <g fill="${color}">
+                <circle cx="61" cy="61" r="3"/><circle cx="73" cy="61" r="3"/>
+                <circle cx="127" cy="61" r="3"/><circle cx="139" cy="61" r="3"/>
+                <circle cx="94" cy="109" r="3"/><circle cx="106" cy="109" r="3"/>
+            </g>`,
 
-    keno: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#123437"/>
-            <g fill="#147f79">
-                ${Array.from({length:20},(_,i)=>{
-                    return `<circle cx="${42+(i%5)*34}" cy="${26+Math.floor(i/5)*26}" r="12"/>`;
-                }).join("")}
-            </g>
-            <g fill="#fff" font-size="9" text-anchor="middle">
-                <text x="42" y="29">4</text><text x="76" y="29">9</text>
-                <text x="110" y="29">12</text><text x="144" y="29">21</text>
-                <text x="178" y="29">30</text>
-                <text x="76" y="55">15</text><text x="144" y="81">36</text>
-            </g>
-            <circle cx="110" cy="78" r="13" fill="#00e701"/>
-            <text x="110" y="82" text-anchor="middle" fill="#102012" font-size="10" font-weight="bold">18</text>
-        </svg>`,
+        pump: `
+            <path d="M100 23 C65 65 62 85 100 135 C138 85 135 65 100 23Z" fill="${color}"/>
+            <path d="M100 52 C82 78 83 91 100 113 C117 91 118 78 100 52Z" fill="#b6ffba"/>
+            <path d="M65 142 L135 142" stroke="${color}" stroke-width="5" stroke-linecap="round"/>`,
 
-    wheel: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#30251a"/>
-            <circle cx="110" cy="68" r="55" fill="#d7a53b"/>
-            <circle cx="110" cy="68" r="48" fill="#203c2a"/>
-            ${Array.from({length:8},(_,i)=>{
-                return `<path d="M110 68 L${110+48*Math.cos(i*Math.PI/4)} ${68+48*Math.sin(i*Math.PI/4)}" stroke="#e6bd65" stroke-width="2"/>`;
-            }).join("")}
-            <circle cx="110" cy="68" r="13" fill="#e3bd6a"/>
-            <path d="M110 5 L101 19 L119 19 Z" fill="#fff"/>
-        </svg>`,
+        baccarat: `
+            <rect x="42" y="38" width="57" height="80" rx="6" fill="#e8eee9" transform="rotate(-12 70 78)"/>
+            <rect x="102" y="38" width="57" height="80" rx="6" fill="${color}" transform="rotate(12 130 78)"/>
+            <text x="69" y="88" text-anchor="middle" font-size="27" fill="#b62f45">A</text>
+            <text x="130" y="88" text-anchor="middle" font-size="27" fill="#102014">K</text>`,
 
-    flip: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#292419"/>
-            <g transform="translate(57 22) rotate(-12 40 45)">
-                <rect width="75" height="90" rx="8" fill="#d9ae50"/>
-                <circle cx="37" cy="45" r="24" fill="#f8df9c"/>
-                <text x="37" y="54" font-size="28" text-anchor="middle" fill="#80571b">★</text>
-            </g>
-            <g transform="translate(112 22) rotate(12 40 45)">
-                <rect width="75" height="90" rx="8" fill="#eee6d3"/>
-                <circle cx="37" cy="45" r="24" fill="#d2c6ae"/>
-                <text x="37" y="54" font-size="28" text-anchor="middle" fill="#a33b3b">♦</text>
-            </g>
-        </svg>`,
+        blackjack: `
+            <rect x="45" y="38" width="64" height="88" rx="6" fill="#eaf0eb" transform="rotate(-12 75 82)"/>
+            <rect x="100" y="38" width="64" height="88" rx="6" fill="#eaf0eb" transform="rotate(12 132 82)"/>
+            <text x="72" y="92" text-anchor="middle" font-size="31" fill="#b72f45">A</text>
+            <text x="132" y="92" text-anchor="middle" font-size="31" fill="#17251b">K</text>`,
 
-    tower: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#30241c"/>
-            <path d="M75 115 L75 45 L110 15 L145 45 L145 115 Z" fill="#9a6637" stroke="#d49a55" stroke-width="3"/>
-            <path d="M92 115 L92 66 L110 48 L128 66 L128 115" fill="#4c3022"/>
-            <path d="M65 48 L110 10 L155 48" fill="none" stroke="#e0b477" stroke-width="6"/>
-            <path d="M95 40 L110 28 L125 40" fill="none" stroke="#f0d6a2" stroke-width="3"/>
-        </svg>`,
+        roulette: `
+            <circle cx="100" cy="85" r="59" fill="#17291d" stroke="${color}" stroke-width="4"/>
+            ${Array.from({ length: 12 }, (_, i) => `<path d="M100 85 L${100 + 56 * Math.cos(i * Math.PI / 6)} ${85 + 56 * Math.sin(i * Math.PI / 6)}" stroke="${i % 2 ? "#e34d52" : "#e7e9e7"}" stroke-width="7"/>`).join("")}
+            <circle cx="100" cy="85" r="16" fill="${color}"/>`,
 
-    diamonds: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#12333b"/>
-            <g fill="#39e3d5" stroke="#b3fff8" stroke-width="2">
-                <path d="M110 15 L145 55 L110 112 L75 55 Z"/>
-                <path d="M110 15 L110 112 L75 55 Z" fill="#168e94"/>
-                <path d="M110 15 L145 55 L110 55 Z" fill="#8bfff0"/>
-            </g>
-            <circle cx="110" cy="60" r="44" fill="none" stroke="#65dcd1" opacity=".3"/>
-        </svg>`,
+        poker: `
+            <rect x="42" y="43" width="67" height="88" rx="7" fill="#e8eee9" transform="rotate(-10 75 87)"/>
+            <rect x="96" y="37" width="67" height="88" rx="7" fill="#e8eee9" transform="rotate(10 130 81)"/>
+            <text x="73" y="94" text-anchor="middle" font-size="30" fill="#c33c4b">A</text>
+            <text x="129" y="89" text-anchor="middle" font-size="30" fill="#c33c4b">Q</text>`,
 
-    darts: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#302020"/>
-            <circle cx="110" cy="68" r="51" fill="#e5e3d8"/>
-            <circle cx="110" cy="68" r="41" fill="#c74742"/>
-            <circle cx="110" cy="68" r="28" fill="#e8e1cf"/>
-            <circle cx="110" cy="68" r="17" fill="#c74742"/>
-            <circle cx="110" cy="68" r="7" fill="#e3c45d"/>
-            <path d="M110 5 L110 68" stroke="#fff" stroke-width="3"/>
-        </svg>`,
+        cases: `
+            <rect x="49" y="51" width="102" height="76" rx="9" fill="${secondary}" stroke="${color}" stroke-width="3"/>
+            <path d="M49 70 L100 40 L151 70" fill="${color}" opacity=".6" stroke="${color}" stroke-width="3"/>
+            <rect x="91" y="79" width="18" height="28" rx="3" fill="${color}"/>`,
 
-    moles: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#33251c"/>
-            ${[0,1,2].map((n)=>`<ellipse cx="${60+n*50}" cy="100" rx="22" ry="14" fill="#795333"/>`).join("")}
-            <circle cx="110" cy="64" r="27" fill="#ad7951"/>
-            <circle cx="100" cy="58" r="4" fill="#241b16"/>
-            <circle cx="120" cy="58" r="4" fill="#241b16"/>
-            <ellipse cx="110" cy="72" rx="9" ry="6" fill="#4c2c20"/>
-            <circle cx="110" cy="49" r="9" fill="#c18c64"/>
-        </svg>`,
+        tome: `
+            <path d="M45 45 Q73 34 100 55 Q127 34 155 45 L155 132 Q127 121 100 142 Q73 121 45 132 Z" fill="${secondary}" stroke="${color}" stroke-width="3"/>
+            <path d="M100 55 L100 142" stroke="${color}" stroke-width="2"/>
+            <path d="M62 70 L87 76 M62 87 L87 93 M113 76 L138 70 M113 93 L138 87" stroke="#b6d7bb" stroke-width="3" stroke-linecap="round"/>`
+    };
 
-    pump: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#17321e"/>
-            <path d="M110 111 C35 70 70 12 110 50 C150 12 185 70 110 111" fill="#00b95b" stroke="#67ee91" stroke-width="3"/>
-            <path d="M110 111 L110 60" stroke="#c7f7cf" stroke-width="3"/>
-            <circle cx="110" cy="68" r="18" fill="#a4ff9b" opacity=".6"/>
-        </svg>`,
-
-    baccarat: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#36191e"/>
-            <rect x="48" y="28" width="55" height="78" rx="5" fill="#e7e2d9" transform="rotate(-12 75 67)"/>
-            <rect x="117" y="28" width="55" height="78" rx="5" fill="#e7e2d9" transform="rotate(12 145 67)"/>
-            <text x="75" y="76" font-size="28" fill="#bd363d" text-anchor="middle">♥</text>
-            <text x="145" y="76" font-size="28" fill="#263a63" text-anchor="middle">♠</text>
-        </svg>`,
-
-    blackjack: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#123c2a"/>
-            <rect x="58" y="26" width="65" height="86" rx="5" fill="#f3eee2" transform="rotate(-12 90 69)"/>
-            <rect x="105" y="26" width="65" height="86" rx="5" fill="#f3eee2" transform="rotate(12 135 69)"/>
-            <text x="86" y="59" font-size="17" fill="#c63c3c">A</text>
-            <text x="142" y="59" font-size="17" fill="#222">K</text>
-            <text x="110" y="100" font-size="23" fill="#e9c85c" text-anchor="middle">21</text>
-        </svg>`,
-
-    roulette: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#172c20"/>
-            <circle cx="110" cy="68" r="54" fill="#d2a84d"/>
-            <circle cx="110" cy="68" r="47" fill="#1c2921"/>
-            ${Array.from({length:12},(_,i)=>`<path d="M110 68 L${110+47*Math.cos(i*Math.PI/6)} ${68+47*Math.sin(i*Math.PI/6)}" stroke="${i%2?"#b52d35":"#e8e0cb"}" stroke-width="9"/>`).join("")}
-            <circle cx="110" cy="68" r="15" fill="#d3ae60"/>
-        </svg>`,
-
-    poker: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#27313d"/>
-            <rect x="47" y="23" width="55" height="85" rx="5" fill="#f2eee5" transform="rotate(-15 75 65)"/>
-            <rect x="83" y="23" width="55" height="85" rx="5" fill="#f2eee5"/>
-            <rect x="119" y="23" width="55" height="85" rx="5" fill="#f2eee5" transform="rotate(15 145 65)"/>
-            <g fill="#c33c42" font-size="27" text-anchor="middle">
-                <text x="75" y="75">♥</text><text x="110" y="75">♦</text><text x="145" y="75">♣</text>
-            </g>
-        </svg>`,
-
-    cases: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#32291d"/>
-            <rect x="55" y="40" width="110" height="70" rx="8" fill="#976b35" stroke="#d5ad67" stroke-width="4"/>
-            <path d="M55 59 L165 59" stroke="#e5c27e" stroke-width="3"/>
-            <rect x="100" y="57" width="20" height="18" rx="3" fill="#e7c66e"/>
-            <path d="M110 75 L110 91" stroke="#5c421f" stroke-width="4"/>
-            <circle cx="110" cy="22" r="10" fill="#e7c66e"/>
-        </svg>`,
-
-    tome: `
-        <svg viewBox="0 0 220 135" xmlns="http://www.w3.org/2000/svg">
-            <rect width="220" height="135" fill="#30261d"/>
-            <path d="M45 30 Q80 18 110 35 Q140 18 175 30 L175 108 Q140 96 110 112 Q80 96 45 108 Z" fill="#e5d1a2" stroke="#ad8c54" stroke-width="4"/>
-            <path d="M110 35 L110 112" stroke="#ad8c54" stroke-width="3"/>
-            <path d="M60 49 L94 49 M60 61 L94 61 M60 73 L94 73 M126 49 L160 49 M126 61 L160 61 M126 73 L160 73" stroke="#a88d60" stroke-width="2"/>
-            <text x="110" y="94" text-anchor="middle" font-size="18" fill="#946f3f">✦</text>
-        </svg>`
-};
-
+    return `
+        <svg viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-label="${type} game artwork">
+            ${drawings[type] || drawings.diamonds}
+        </svg>
+    `;
+}
 
 /* =========================================
    GAME COLLECTION
 ========================================= */
 
 const games = [
-    { id: "plinko", name: "Plinko", category: "Originals", group: "originals", playable: true },
-    { id: "limbo", name: "Limbo", category: "Originals", group: "originals" },
-    { id: "mines", name: "Mines", category: "Originals", group: "originals" },
-    { id: "dice", name: "Dice", category: "Originals", group: "originals" },
-    { id: "keno", name: "Keno", category: "Originals", group: "originals" },
-    { id: "wheel", name: "Wheel", category: "Originals", group: "originals" },
-    { id: "flip", name: "Flip", category: "Originals", group: "originals" },
-    { id: "tower", name: "Dragon Tower", category: "Originals", group: "originals" },
-    { id: "diamonds", name: "Diamonds", category: "Originals", group: "originals" },
-    { id: "darts", name: "Darts", category: "Originals", group: "originals" },
-    { id: "moles", name: "Moles", category: "Originals", group: "originals" },
-    { id: "pump", name: "Pump", category: "Originals", group: "originals" },
-    { id: "baccarat", name: "Baccarat", category: "Table Games", group: "table" },
-    { id: "blackjack", name: "Blackjack", category: "Table Games", group: "table" },
-    { id: "roulette", name: "Roulette", category: "Table Games", group: "table" },
-    { id: "poker", name: "Video Poker", category: "Table Games", group: "table" },
-    { id: "cases", name: "Cases", category: "Originals", group: "originals" },
-    { id: "tome", name: "Tome of Life", category: "Originals", group: "originals" }
+    { id: "plinko", name: "Plinko", category: "originals", art: "plinko", color: "#00e701", subtitle: "Drop and multiply", playable: true },
+    { id: "limbo", name: "Limbo", category: "originals", art: "limbo", color: "#27d6b5", subtitle: "Reach your target" },
+    { id: "mines", name: "Mines", category: "originals", art: "mines", color: "#00e701", subtitle: "Find the safe tiles" },
+    { id: "dice", name: "Dice", category: "originals", art: "dice", color: "#e2b34a", subtitle: "Roll your chance" },
+    { id: "keno", name: "Keno", category: "originals", art: "keno", color: "#54c8ff", subtitle: "Pick your numbers" },
+    { id: "wheel", name: "Wheel", category: "originals", art: "wheel", color: "#f1b94e", subtitle: "Spin the wheel" },
+    { id: "flip", name: "Flip", category: "originals", art: "flip", color: "#00e701", subtitle: "Choose a side" },
+    { id: "tower", name: "Dragon Tower", category: "originals", art: "tower", color: "#f07b3e", subtitle: "Climb the tower" },
+    { id: "diamonds", name: "Diamonds", category: "originals", art: "diamonds", color: "#56d8e7", subtitle: "Find the diamonds" },
+    { id: "darts", name: "Darts", category: "originals", art: "darts", color: "#f4b84a", subtitle: "Hit your target" },
+    { id: "moles", name: "Moles", category: "originals", art: "moles", color: "#b5e66b", subtitle: "Catch the moles" },
+    { id: "pump", name: "Pump", category: "originals", art: "pump", color: "#ed8b48", subtitle: "Build your multiplier" },
+
+    { id: "baccarat", name: "Baccarat", category: "table", art: "baccarat", color: "#e5c36c", subtitle: "Player vs Banker" },
+    { id: "blackjack", name: "Blackjack", category: "table", art: "blackjack", color: "#00e701", subtitle: "Beat the dealer" },
+    { id: "roulette", name: "Roulette", category: "table", art: "roulette", color: "#e85c63", subtitle: "Place your bets" },
+    { id: "poker", name: "Video Poker", category: "table", art: "poker", color: "#d5b5f1", subtitle: "Build your hand" },
+
+    { id: "cases", name: "Cases", category: "other", art: "cases", color: "#d6aa54", subtitle: "Open a case" },
+    { id: "tome", name: "Tome of Life", category: "other", art: "tome", color: "#a88cf0", subtitle: "Discover your fate" }
 ];
 
-
 /* =========================================
-   FORMAT AND STORAGE
+   APPLICATION STATE
 ========================================= */
 
-function formatBalance(value) {
-    return value.toLocaleString("en-US", {
+function loadNumber(key, fallback) {
+    try {
+        const value = localStorage.getItem(key);
+        if (value === null) return fallback;
+
+        const number = Number(value);
+        return Number.isFinite(number) && number >= 0 ? number : fallback;
+    } catch (error) {
+        return fallback;
+    }
+}
+
+function loadArray(key) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(value) ? value : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+let balance = loadNumber(STORAGE_KEYS.balance, STARTING_BALANCE);
+let history = loadArray(STORAGE_KEYS.history);
+let favorites = loadArray(STORAGE_KEYS.favorites);
+
+let currentFilter = "all";
+let currentSearch = "";
+
+/* =========================================
+   SAVE FUNCTIONS
+========================================= */
+
+function saveBalance() {
+    localStorage.setItem(STORAGE_KEYS.balance, String(balance));
+    updateBalanceDisplay();
+}
+
+function saveHistory() {
+    localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history));
+}
+
+function saveFavorites() {
+    localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(favorites));
+}
+
+/* =========================================
+   BALANCE DISPLAY
+========================================= */
+
+function formatUSDT(amount) {
+    return Number(amount).toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 }
 
-function saveBalance() {
-    localStorage.setItem(STORAGE.balance, String(balance));
-    updateBalanceDisplay();
-}
-
 function updateBalanceDisplay() {
-    document.getElementById("topBalance").textContent =
-        formatBalance(balance);
+    const topBalance = document.getElementById("topBalance");
+    const modalBalance = document.getElementById("modalBalance");
 
-    document.getElementById("modalBalance").textContent =
-        formatBalance(balance) + " USDT";
-}
-
-function saveFavorites() {
-    localStorage.setItem(
-        STORAGE.favorites,
-        JSON.stringify(favorites)
-    );
-}
-
-function saveHistory() {
-    localStorage.setItem(
-        STORAGE.history,
-        JSON.stringify(history.slice(0, 50))
-    );
-}
-
-
-/* =========================================
-   RENDER GAME CARDS
-========================================= */
-
-function renderGames() {
-    const grid = document.getElementById("gamesGrid");
-    const empty = document.getElementById("emptyState");
-
-    const filteredGames = games.filter(game => {
-
-        const matchesSearch =
-            game.name.toLowerCase().includes(searchTerm) ||
-            game.category.toLowerCase().includes(searchTerm);
-
-        let matchesFilter = true;
-
-        if (activeFilter === "favorites") {
-            matchesFilter = favorites.includes(game.id);
-        } else if (activeFilter !== "all") {
-            matchesFilter = game.group === activeFilter;
-        }
-
-        return matchesSearch && matchesFilter;
-    });
-
-    document.getElementById("gameCount").textContent =
-        `${filteredGames.length} GAMES`;
-
-    grid.innerHTML = filteredGames.map(game => {
-
-        const isFavorite = favorites.includes(game.id);
-
-        const cardContent = `
-            <div class="game-art">
-                ${artwork[game.id] || ""}
-            </div>
-
-            <div class="game-card-info">
-                <div class="game-card-title">${game.name}</div>
-                <div class="game-card-category">${game.category}</div>
-
-                <div class="game-card-footer">
-                    ${
-                        game.playable
-                            ? '<span class="playing-label">PLAY NOW →</span>'
-                            : '<span class="coming-soon">COMING SOON</span>'
-                    }
-                </div>
-            </div>
-        `;
-
-        return `
-            <article class="game-card">
-
-                <button
-                    class="favorite-button ${isFavorite ? "selected" : ""}"
-                    data-favorite="${game.id}"
-                    aria-label="Toggle ${game.name} favorite"
-                    title="Add to favorites"
-                >${isFavorite ? "♥" : "♡"}</button>
-
-                ${
-                    game.playable
-                        ? `<a class="game-link" href="games/plinko.html">${cardContent}</a>`
-                        : `<div class="game-link disabled">${cardContent}</div>`
-                }
-
-            </article>
-        `;
-
-    }).join("");
-
-    empty.hidden = filteredGames.length !== 0;
-}
-
-
-/* =========================================
-   FILTERS AND SEARCH
-========================================= */
-
-function setFilter(filter) {
-    activeFilter = filter;
-
-    document.querySelectorAll("[data-filter]").forEach(button => {
-        button.classList.toggle(
-            "active",
-            button.dataset.filter === filter
-        );
-    });
-
-    renderGames();
-}
-
-document.querySelectorAll("[data-filter]").forEach(button => {
-    button.addEventListener("click", () => {
-        setFilter(button.dataset.filter);
-    });
-});
-
-document.getElementById("gameSearch").addEventListener("input", event => {
-    searchTerm = event.target.value.trim().toLowerCase();
-    renderGames();
-});
-
-
-/* =========================================
-   FAVORITES
-========================================= */
-
-document.getElementById("gamesGrid").addEventListener("click", event => {
-
-    const button = event.target.closest("[data-favorite]");
-
-    if (!button) return;
-
-    event.preventDefault();
-
-    const gameId = button.dataset.favorite;
-
-    if (favorites.includes(gameId)) {
-        favorites = favorites.filter(id => id !== gameId);
-    } else {
-        favorites.push(gameId);
+    if (topBalance) {
+        topBalance.textContent = formatUSDT(balance);
     }
 
-    saveFavorites();
-    renderGames();
-});
-
-
-/* =========================================
-   WALLET MODAL
-========================================= */
-
-function openModal(id) {
-    document.getElementById(id).classList.add("show");
+    if (modalBalance) {
+        modalBalance.textContent = `${formatUSDT(balance)} USDT`;
+    }
 }
 
-function closeModal(id) {
-    document.getElementById(id).classList.remove("show");
-}
-
-document.getElementById("openWallet").addEventListener("click", () => {
-    openModal("walletModal");
-});
-
-document.getElementById("topWallet").addEventListener("click", () => {
-    openModal("walletModal");
-});
-
-document.querySelectorAll("[data-close]").forEach(button => {
-    button.addEventListener("click", () => {
-        closeModal(button.dataset.close);
-    });
-});
-
-document.querySelectorAll(".modal-overlay").forEach(overlay => {
-    overlay.addEventListener("click", event => {
-        if (event.target === overlay) {
-            overlay.classList.remove("show");
-        }
-    });
-});
-
-document.getElementById("addCredits").addEventListener("click", () => {
-
-    balance += 1000;
-
-    saveBalance();
-
-    addHistory(
-        "Demo credits added",
-        1000,
-        "credit"
-    );
-
-});
-
-
 /* =========================================
-   VIRTUAL BET HISTORY
+   TRANSACTION HISTORY
 ========================================= */
 
 function addHistory(description, amount, type) {
-
     history.unshift({
+        id: Date.now() + Math.random(),
         description,
-        amount,
+        amount: Number(amount),
         type,
-        date: new Date().toLocaleString()
+        date: new Date().toISOString()
     });
+
+    history = history.slice(0, 100);
 
     saveHistory();
     renderHistory();
 }
 
 function renderHistory() {
+    const historyList = document.getElementById("historyList");
 
-    const list = document.getElementById("historyList");
+    if (!historyList) return;
 
-    if (!history.length) {
-        list.innerHTML = '<p class="no-history">No activity yet.</p>';
+    if (history.length === 0) {
+        historyList.innerHTML = `
+            <div class="history-empty">
+                No transactions yet.
+            </div>
+        `;
         return;
     }
 
-    list.innerHTML = history.map(item => {
-
-        const positive = item.amount >= 0;
+    historyList.innerHTML = history.map(item => {
+        const isCredit = item.type === "credit";
+        const date = new Date(item.date);
 
         return `
-            <div class="history-row">
+            <div class="history-item">
                 <div>
                     <strong>${escapeHTML(item.description)}</strong>
-                    <small>${escapeHTML(item.date)}</small>
+                    <small>${date.toLocaleString()}</small>
                 </div>
 
-                <div class="history-amount ${positive ? "positive" : "negative"}">
-                    ${positive ? "+" : ""}${formatBalance(item.amount)}
+                <div class="history-amount ${isCredit ? "credit" : "debit"}">
+                    ${isCredit ? "+" : "-"}${formatUSDT(item.amount)} USDT
                 </div>
             </div>
         `;
@@ -559,29 +324,300 @@ function escapeHTML(value) {
     })[character]);
 }
 
-document.getElementById("historyButton").addEventListener("click", () => {
-    renderHistory();
-    openModal("historyModal");
+/* =========================================
+   GAME RENDERING
+========================================= */
+
+function renderGames() {
+    const grid = document.getElementById("gamesGrid");
+    const emptyState = document.getElementById("emptyState");
+
+    let filteredGames = [...games];
+
+    if (currentFilter === "favorites") {
+        filteredGames = filteredGames.filter(game =>
+            favorites.includes(game.id)
+        );
+    } else if (currentFilter !== "all") {
+        filteredGames = filteredGames.filter(game =>
+            game.category === currentFilter
+        );
+    }
+
+    if (currentSearch.trim()) {
+        const query = currentSearch.toLowerCase().trim();
+
+        filteredGames = filteredGames.filter(game =>
+            game.name.toLowerCase().includes(query) ||
+            game.subtitle.toLowerCase().includes(query)
+        );
+    }
+
+    document.getElementById("favoriteCount").textContent = favorites.length;
+
+    if (filteredGames.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+    }
+
+    emptyState.classList.add("hidden");
+
+    grid.innerHTML = filteredGames.map(game => {
+        const isFavorite = favorites.includes(game.id);
+        const destination = game.playable
+            ? "games/plinko.html"
+            : "#";
+
+        return `
+            <article class="game-card"
+                style="--art-bg:${game.color}12; --art-glow:${game.color};">
+
+                <a class="game-card-link"
+                   href="${destination}"
+                   ${game.playable ? "" : 'data-unavailable="true"'}
+                   aria-label="Open ${escapeHTML(game.name)}">
+
+                    <div class="game-art">
+                        ${makeArtwork(game.art, game.color)}
+                    </div>
+
+                    <div class="game-card-info">
+                        <div>
+                            <h3>${escapeHTML(game.name)}</h3>
+                            <p>${escapeHTML(game.subtitle)}</p>
+                        </div>
+                    </div>
+                </a>
+
+                <button
+                    class="favorite-button ${isFavorite ? "selected" : ""}"
+                    data-favorite="${game.id}"
+                    aria-label="${isFavorite ? "Remove from" : "Add to"} favorites"
+                    title="${isFavorite ? "Remove favorite" : "Add favorite"}"
+                    style="position:absolute; right:9px; top:9px;">
+                    ${isFavorite ? "★" : "☆"}
+                </button>
+            </article>
+        `;
+    }).join("");
+}
+
+/* =========================================
+   FILTERS AND SEARCH
+========================================= */
+
+function setFilter(filter) {
+    currentFilter = filter;
+
+    document.querySelectorAll(".filter-button").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.filter === filter
+        );
+    });
+
+    document.querySelectorAll(".category-shortcut").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.category === filter
+        );
+    });
+
+    const titles = {
+        all: "All Games",
+        originals: "Originals",
+        table: "Table Games",
+        other: "Other Games",
+        favorites: "Favorites"
+    };
+
+    document.getElementById("sectionTitle").textContent =
+        titles[filter] || "All Games";
+
+    renderGames();
+
+    document.getElementById("gamesSection").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+document.querySelectorAll(".filter-button").forEach(button => {
+    button.addEventListener("click", () => {
+        setFilter(button.dataset.filter);
+    });
 });
 
+document.querySelectorAll(".category-shortcut").forEach(button => {
+    button.addEventListener("click", () => {
+        setFilter(button.dataset.category);
+        closeSidebar();
+    });
+});
+
+document.getElementById("gameSearch").addEventListener("input", event => {
+    currentSearch = event.target.value;
+    renderGames();
+});
+
+/* =========================================
+   FAVORITES
+========================================= */
+
+document.getElementById("gamesGrid").addEventListener("click", event => {
+    const favoriteButton = event.target.closest("[data-favorite]");
+
+    if (favoriteButton) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const id = favoriteButton.dataset.favorite;
+
+        if (favorites.includes(id)) {
+            favorites = favorites.filter(item => item !== id);
+        } else {
+            favorites.push(id);
+        }
+
+        saveFavorites();
+        renderGames();
+    }
+
+    const unavailableLink = event.target.closest('[data-unavailable="true"]');
+
+    if (unavailableLink) {
+        event.preventDefault();
+    }
+});
+
+document.getElementById("favoritesShortcut").addEventListener("click", () => {
+    setFilter("favorites");
+    closeSidebar();
+});
+
+/* =========================================
+   MODAL CONTROLS
+========================================= */
+
+function openModal(id) {
+    const modal = document.getElementById(id);
+
+    if (modal) {
+        modal.classList.add("show");
+    }
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+
+    if (modal) {
+        modal.classList.remove("show");
+    }
+}
+
+document.getElementById("openWallet").addEventListener("click", () => {
+    updateBalanceDisplay();
+    document.getElementById("depositError").textContent = "";
+    openModal("walletModal");
+});
+
+document.getElementById("historyShortcut").addEventListener("click", () => {
+    renderHistory();
+    openModal("historyModal");
+    closeSidebar();
+});
+
+document.querySelectorAll("[data-close]").forEach(button => {
+    button.addEventListener("click", () => {
+        closeModal(button.dataset.close);
+    });
+});
+
+document.querySelectorAll(".modal-overlay").forEach(overlay => {
+    overlay.addEventListener("click", event => {
+        if (event.target === overlay) {
+            overlay.classList.remove("show");
+        }
+    });
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        document.querySelectorAll(".modal-overlay.show").forEach(modal => {
+            modal.classList.remove("show");
+        });
+
+        closeSidebar();
+    }
+});
+
+/* =========================================
+   VIRTUAL DEPOSIT
+========================================= */
+
+document.getElementById("confirmDeposit").addEventListener("click", () => {
+    const input = document.getElementById("depositAmount");
+    const error = document.getElementById("depositError");
+
+    const amount = Number(input.value);
+
+    error.textContent = "";
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        error.textContent = "Enter a valid deposit amount.";
+        return;
+    }
+
+    if (amount > 1000000000) {
+        error.textContent = "Maximum virtual deposit is 1,000,000,000 USDT.";
+        return;
+    }
+
+    if (!Number.isFinite(balance + amount)) {
+        error.textContent = "The resulting balance is too large.";
+        return;
+    }
+
+    balance = Math.round((balance + amount) * 100) / 100;
+
+    saveBalance();
+
+    addHistory("Virtual deposit", amount, "credit");
+
+    input.value = "";
+
+    closeModal("walletModal");
+});
+
+document.getElementById("depositAmount").addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+        document.getElementById("confirmDeposit").click();
+    }
+});
 
 /* =========================================
    MOBILE SIDEBAR
 ========================================= */
 
-document.getElementById("mobileMenu").addEventListener("click", () => {
-    document.getElementById("sidebar").classList.toggle("open");
-});
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
 
-document.querySelectorAll(".sidebar .nav-item").forEach(button => {
-    button.addEventListener("click", () => {
-        document.getElementById("sidebar").classList.remove("open");
-    });
-});
+function openSidebar() {
+    sidebar.classList.add("open");
+    sidebarOverlay.classList.add("show");
+}
 
+function closeSidebar() {
+    sidebar.classList.remove("open");
+    sidebarOverlay.classList.remove("show");
+}
+
+document.getElementById("mobileMenu").addEventListener("click", openSidebar);
+sidebarOverlay.addEventListener("click", closeSidebar);
 
 /* =========================================
-   INITIALIZE VAULTPLAY
+   INITIALIZE
 ========================================= */
 
 updateBalanceDisplay();
