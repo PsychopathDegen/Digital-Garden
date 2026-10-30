@@ -32,28 +32,15 @@ body {
     font-family: Inter, Arial, sans-serif;
 }
 
-button, input {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-button:disabled {
-    cursor: not-allowed;
-    opacity: .45;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .45; }
+a { text-decoration: none; color: inherit; }
 
 /* TOP BAR */
 
 .topbar {
-    height: 70px;
+    min-height: 70px;
     background: #141a15;
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -82,9 +69,7 @@ a {
     font-size: 21px;
 }
 
-.brand-light {
-    color: var(--green);
-}
+.brand-light { color: var(--green); }
 
 .topbar-right {
     display: flex;
@@ -99,9 +84,7 @@ a {
     padding: 10px;
 }
 
-.back-link:hover {
-    color: var(--green);
-}
+.back-link:hover { color: var(--green); }
 
 .wallet {
     display: flex;
@@ -115,11 +98,6 @@ a {
     font-weight: 800;
 }
 
-.wallet-symbol {
-    color: var(--green);
-    font-size: 16px;
-}
-
 .wallet-currency {
     color: var(--muted);
     font-size: 10px;
@@ -128,9 +106,10 @@ a {
 /* PAGE */
 
 .page {
-    max-width: 1450px;
+    width: 100%;
+    max-width: 1700px;
     margin: auto;
-    padding: 28px;
+    padding: 25px 28px;
 }
 
 .breadcrumb {
@@ -183,7 +162,7 @@ a {
     box-shadow: 0 0 8px var(--green);
 }
 
-/* MAIN GAME LAYOUT */
+/* GAME LAYOUT */
 
 .game-layout {
     display: grid;
@@ -201,9 +180,7 @@ a {
     padding: 20px;
 }
 
-.control-group {
-    margin-bottom: 21px;
-}
+.control-group { margin-bottom: 21px; }
 
 .control-label {
     display: flex;
@@ -230,9 +207,7 @@ a {
     overflow: hidden;
 }
 
-.bet-input-wrap:focus-within {
-    border-color: var(--green);
-}
+.bet-input-wrap:focus-within { border-color: var(--green); }
 
 .bet-input-wrap input {
     width: 100%;
@@ -325,9 +300,7 @@ a {
     font-weight: 900;
 }
 
-.rows-control button:hover {
-    color: var(--green);
-}
+.rows-control button:hover { color: var(--green); }
 
 .rows-value {
     font-size: 13px;
@@ -368,6 +341,7 @@ a {
 
 .board-panel {
     min-width: 0;
+    width: 100%;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 9px;
@@ -396,18 +370,18 @@ a {
 
 .board-wrapper {
     width: 100%;
-    min-height: 300px;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
 }
 
 #plinkoBoard {
-    width: 100%;
-    max-width: 740px;
-    height: auto;
     display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
     overflow: visible;
 }
 
@@ -443,50 +417,7 @@ a {
     padding-top: 7px;
 }
 
-.board-status strong {
-    color: var(--green);
-}
-
-/* RESULT */
-
-.result-panel {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 9px;
-    margin-top: 10px;
-}
-
-.result-box {
-    background: #111712;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 11px;
-    min-width: 0;
-}
-
-.result-box span {
-    display: block;
-    color: var(--muted);
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: .5px;
-    margin-bottom: 7px;
-}
-
-.result-box strong {
-    display: block;
-    font-size: 14px;
-    font-weight: 900;
-    overflow-wrap: anywhere;
-}
-
-.result-box strong.green {
-    color: var(--green);
-}
-
-.result-box strong.red {
-    color: var(--red);
-}
+.board-status strong { color: var(--green); }
 
 /* LOWER SECTIONS */
 
@@ -561,18 +492,14 @@ a {
     margin-bottom: 16px;
 }
 
-.fairness-heading h3 {
-    font-size: 13px;
-}
+.fairness-heading h3 { font-size: 13px; }
 
 .fairness-heading span {
     color: var(--green);
     font-size: 10px;
 }
 
-.seed-field {
-    margin-bottom: 13px;
-}
+.seed-field { margin-bottom: 13px; }
 
 .seed-field label {
     display: block;
@@ -595,9 +522,7 @@ a {
     font-size: 10px;
 }
 
-.seed-input:focus {
-    border-color: var(--green);
-}
+.seed-input:focus { border-color: var(--green); }
 
 .seed-readonly {
     display: flex;
@@ -605,9 +530,7 @@ a {
     gap: 8px;
 }
 
-.seed-readonly input {
-    flex: 1;
-}
+.seed-readonly input { flex: 1; }
 
 .seed-readonly button,
 .seed-action {
@@ -659,26 +582,17 @@ a {
     font-size: 10px;
 }
 
-.history-row:last-child {
-    border-bottom: 0;
-}
+.history-row:last-child { border-bottom: 0; }
 
-.history-row span {
-    color: #aab6ad;
-}
+.history-row span { color: #aab6ad; }
 
 .history-row strong {
     color: white;
     font-size: 10px;
 }
 
-.history-row .positive {
-    color: var(--green);
-}
-
-.history-row .negative {
-    color: var(--red);
-}
+.history-row .positive { color: var(--green); }
+.history-row .negative { color: var(--red); }
 
 .history-empty {
     text-align: center;
@@ -715,51 +629,33 @@ a {
 
 /* RESPONSIVE */
 
+@media (min-width: 1200px) {
+    .board-panel { padding: 22px; }
+}
+
 @media (max-width: 950px) {
     .game-layout {
         grid-template-columns: 250px minmax(0, 1fr);
     }
 
-    .page {
-        padding: 20px;
-    }
-
-    .controls {
-        padding: 15px;
-    }
+    .page { padding: 20px; }
+    .controls { padding: 15px; }
 }
 
 @media (max-width: 720px) {
-    .game-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .controls {
-        order: 2;
-    }
-
-    .board-panel {
-        order: 1;
-    }
-
-    .lower-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .board-wrapper {
-        min-height: 250px;
-    }
+    .game-layout { grid-template-columns: 1fr; }
+    .controls { order: 2; }
+    .board-panel { order: 1; }
+    .lower-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
     .topbar {
         padding: 0 12px;
-        height: 62px;
+        min-height: 62px;
     }
 
-    .brand {
-        font-size: 12px;
-    }
+    .brand { font-size: 12px; }
 
     .brand-mark {
         width: 28px;
@@ -777,9 +673,7 @@ a {
         gap: 4px;
     }
 
-    .page {
-        padding: 17px 12px;
-    }
+    .page { padding: 17px 12px; }
 
     .game-heading {
         align-items: flex-start;
@@ -787,21 +681,9 @@ a {
         gap: 12px;
     }
 
-    .board-panel {
-        padding: 10px;
-    }
+    .board-panel { padding: 8px; }
 
-    .board-wrapper {
-        min-height: 210px;
-    }
-
-    .result-box {
-        padding: 9px 7px;
-    }
-
-    .result-box strong {
-        font-size: 11px;
-    }
+    .board-top { padding: 0 4px; }
 
     .history-row {
         gap: 6px;
@@ -823,7 +705,6 @@ a {
         <a href="../index.html" class="back-link">← Laboratory</a>
 
         <div class="wallet">
-            <span class="wallet-symbol">₮</span>
             <span id="walletBalance">0.00</span>
             <span class="wallet-currency">USDT</span>
         </div>
@@ -850,7 +731,6 @@ a {
 
     <section class="game-layout">
 
-        <!-- CONTROLS -->
         <aside class="controls">
 
             <div class="control-group">
@@ -879,9 +759,7 @@ a {
             </div>
 
             <div class="control-group">
-                <div class="control-label">
-                    <span>RISK</span>
-                </div>
+                <div class="control-label"><span>RISK</span></div>
 
                 <div class="risk-options">
                     <button class="risk-button" data-risk="low">Low</button>
@@ -903,9 +781,7 @@ a {
                 </div>
             </div>
 
-            <button class="play-button" id="playButton">
-                DROP BALL
-            </button>
+            <button class="play-button" id="playButton">DROP BALL</button>
 
             <p class="control-note">
                 Your bet is deducted before the ball drops.
@@ -915,7 +791,6 @@ a {
 
         </aside>
 
-        <!-- BOARD -->
         <section class="board-panel">
 
             <div class="board-top">
@@ -936,27 +811,9 @@ a {
                 Ready when you are.
             </div>
 
-            <div class="result-panel">
-                <div class="result-box">
-                    <span>MULTIPLIER</span>
-                    <strong id="lastMultiplier">—</strong>
-                </div>
-
-                <div class="result-box">
-                    <span>PROFIT / LOSS</span>
-                    <strong id="lastProfit">—</strong>
-                </div>
-
-                <div class="result-box">
-                    <span>PAYOUT</span>
-                    <strong id="lastPayout">—</strong>
-                </div>
-            </div>
-
         </section>
     </section>
 
-    <!-- LOWER PANELS -->
     <section class="lower-grid">
 
         <div class="lower-panel">
@@ -975,7 +832,6 @@ a {
 
     </section>
 
-    <!-- FAIRNESS -->
     <section class="fairness">
 
         <div class="fairness-heading">
@@ -1004,25 +860,13 @@ a {
 
         <div class="seed-field">
             <label for="nonceDisplay">NONCE</label>
-            <input
-                class="seed-input"
-                id="nonceDisplay"
-                readonly
-            >
+            <input class="seed-input" id="nonceDisplay" readonly>
         </div>
 
         <div class="seed-actions">
-            <button class="seed-action" id="changeSeed">
-                Change Seed Pair
-            </button>
-
-            <button class="seed-action" id="revealSeed">
-                Reveal Current Seed
-            </button>
-
-            <button class="seed-action" id="verifyRound">
-                Verify Last Round
-            </button>
+            <button class="seed-action" id="changeSeed">Change Seed Pair</button>
+            <button class="seed-action" id="revealSeed">Reveal Current Seed</button>
+            <button class="seed-action" id="verifyRound">Verify Last Round</button>
         </div>
 
         <p class="fairness-note" id="fairnessStatus">
@@ -1042,9 +886,7 @@ a {
 <script>
 "use strict";
 
-/* =========================================
-   STORAGE AND WALLET
-========================================= */
+/* STORAGE AND WALLET */
 
 const STORAGE = {
     balance: "vaultplay_balance_v1",
@@ -1061,9 +903,40 @@ function readJSON(key, fallback) {
     }
 }
 
+/*
+ Supports a normal numeric storage value, a JSON number,
+ a JSON string, or a wallet object containing a balance.
+ The lobby and Plinko still share vaultplay_balance_v1.
+*/
 function readBalance() {
-    const value = Number(localStorage.getItem(STORAGE.balance));
-    return Number.isFinite(value) && value >= 0 ? value : 0;
+    const raw = localStorage.getItem(STORAGE.balance);
+
+    if (raw === null) return 0;
+
+    let value = raw;
+
+    try {
+        value = JSON.parse(raw);
+    } catch {
+        // Keep the original value if it is not JSON.
+    }
+
+    if (typeof value === "object" && value !== null) {
+        value =
+            value.balance ??
+            value.walletBalance ??
+            value.amount ??
+            value.usdt ??
+            0;
+    }
+
+    if (typeof value === "string") {
+        value = value.replace(/USDT/gi, "").replace(/,/g, "").trim();
+    }
+
+    const number = Number(value);
+
+    return Number.isFinite(number) && number >= 0 ? number : 0;
 }
 
 let balance = readBalance();
@@ -1102,9 +975,7 @@ function addWalletHistory(description, amount, type) {
     );
 }
 
-/* =========================================
-   GAME STATE
-========================================= */
+/* GAME STATE */
 
 let rows = 12;
 let risk = "medium";
@@ -1115,7 +986,6 @@ let gameHistory = [];
 const betInput = document.getElementById("betAmount");
 const playButton = document.getElementById("playButton");
 const board = document.getElementById("plinkoBoard");
-
 const riskButtons = document.querySelectorAll(".risk-button");
 
 const RISK_EXPONENT = {
@@ -1126,9 +996,7 @@ const RISK_EXPONENT = {
 
 const MIN_BET = 0.01;
 
-/* =========================================
-   CRYPTOGRAPHIC FAIRNESS
-========================================= */
+/* CRYPTOGRAPHIC FAIRNESS */
 
 function randomHex(bytes = 32) {
     if (!window.crypto || !crypto.getRandomValues) {
@@ -1204,10 +1072,8 @@ let fair = loadFairState();
 
 async function updateFairDisplay() {
     document.getElementById("clientSeed").value = fair.clientSeed;
-
     document.getElementById("serverHash").value =
         await sha256(fair.serverSeed);
-
     document.getElementById("nonceDisplay").value = fair.nonce;
 }
 
@@ -1217,7 +1083,6 @@ async function createPath(serverSeed, clientSeed, nonce, rowCount) {
     for (let step = 0; step < rowCount; step++) {
         const message = `${clientSeed}:${nonce}:${step}`;
         const digest = await hmacSHA256(serverSeed, message);
-
         path.push(digest[0] < 128 ? 0 : 1);
     }
 
@@ -1228,9 +1093,7 @@ function getBin(path) {
     return path.reduce((sum, direction) => sum + direction, 0);
 }
 
-/* =========================================
-   MULTIPLIERS
-========================================= */
+/* MULTIPLIERS */
 
 function combinations(n, k) {
     if (k < 0 || k > n) return 0;
@@ -1246,7 +1109,6 @@ function combinations(n, k) {
 
 function getMultipliers(rowCount, riskLevel) {
     const exponent = RISK_EXPONENT[riskLevel];
-
     const raw = [];
     const probabilities = [];
 
@@ -1255,7 +1117,6 @@ function getMultipliers(rowCount, riskLevel) {
             combinations(rowCount, bin) / Math.pow(2, rowCount);
 
         const distance = Math.abs(bin - rowCount / 2);
-
         const value = Math.pow(distance + 1, exponent);
 
         raw.push(value);
@@ -1269,14 +1130,12 @@ function getMultipliers(rowCount, riskLevel) {
 
     const targetReturn = 0.99;
 
-    return raw.map(value => {
-        return Number((value * targetReturn / expectedRaw).toFixed(2));
-    });
+    return raw.map(value =>
+        Number((value * targetReturn / expectedRaw).toFixed(2))
+    );
 }
 
-/* =========================================
-   BOARD DRAWING
-========================================= */
+/* BOARD DRAWING */
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -1305,7 +1164,14 @@ function drawBoard() {
 
     const binTop = topY + rows * rowGap + 14;
     const binCount = rows + 1;
-    const binWidth = 30;
+
+    /*
+      IMPORTANT:
+      Each slot is exactly as wide as the horizontal
+      distance between possible ball landing positions.
+      This aligns every multiplier with its landing slot.
+    */
+    const binWidth = pegGap;
     const totalBinWidth = binCount * binWidth;
     const startX = center - totalBinWidth / 2;
 
@@ -1321,7 +1187,6 @@ function drawBoard() {
         startX
     };
 
-    // Background glow
     board.appendChild(svgElement("rect", {
         x: 0,
         y: 0,
@@ -1338,18 +1203,16 @@ function drawBoard() {
         const start = center - ((count - 1) * pegGap) / 2;
 
         for (let col = 0; col < count; col++) {
-            const peg = svgElement("circle", {
+            board.appendChild(svgElement("circle", {
                 cx: start + col * pegGap,
                 cy: y,
                 r: 3.8,
                 class: "peg"
-            });
-
-            board.appendChild(peg);
+            }));
         }
     }
 
-    // Multiplier bins
+    // Multiplier slots
     const multipliers = getMultipliers(rows, risk);
 
     for (let i = 0; i < binCount; i++) {
@@ -1363,7 +1226,7 @@ function drawBoard() {
                 ? (outer ? "#c48d3d" : "#398c50")
                 : (outer ? "#528e57" : "#317e49");
 
-        const rect = svgElement("rect", {
+        board.appendChild(svgElement("rect", {
             x: x + 1,
             y: binTop,
             width: binWidth - 2,
@@ -1371,9 +1234,7 @@ function drawBoard() {
             rx: 3,
             fill: hue,
             class: "bin"
-        });
-
-        board.appendChild(rect);
+        }));
 
         const label = svgElement("text", {
             x: x + binWidth / 2,
@@ -1382,20 +1243,17 @@ function drawBoard() {
         });
 
         label.textContent = `${multipliers[i]}×`;
-
         board.appendChild(label);
     }
 
     // Ball
-    const ball = svgElement("circle", {
+    board.appendChild(svgElement("circle", {
         id: "movingBall",
         cx: center,
         cy: 13,
         r: 7,
         class: "ball"
-    });
-
-    board.appendChild(ball);
+    }));
 
     updateBoardInfo();
 }
@@ -1437,7 +1295,8 @@ function animateBall(path) {
         }
 
         const bin = getBin(path);
-        const binCenter = geo.startX + bin * geo.binWidth + geo.binWidth / 2;
+        const binCenter =
+            geo.startX + bin * geo.binWidth + geo.binWidth / 2;
 
         ball.setAttribute("cx", binCenter);
         ball.setAttribute("cy", geo.binTop - 8);
@@ -1447,18 +1306,13 @@ function animateBall(path) {
     });
 }
 
-/* =========================================
-   BET CONTROLS
-========================================= */
+/* BET CONTROLS */
 
 function setRisk(value) {
     risk = value;
 
     riskButtons.forEach(button => {
-        button.classList.toggle(
-            "active",
-            button.dataset.risk === risk
-        );
+        button.classList.toggle("active", button.dataset.risk === risk);
     });
 
     drawBoard();
@@ -1475,9 +1329,7 @@ function setRows(value) {
     if (busy) return;
 
     rows = Math.max(8, Math.min(16, value));
-
     document.getElementById("rowsValue").textContent = rows;
-
     drawBoard();
 }
 
@@ -1508,29 +1360,7 @@ document.getElementById("maxBet").addEventListener("click", () => {
     betInput.value = Math.max(0, balance).toFixed(2);
 });
 
-/* =========================================
-   RESULT DISPLAY
-========================================= */
-
-function setResult(multiplier, profit, payout) {
-    const multiplierElement = document.getElementById("lastMultiplier");
-    const profitElement = document.getElementById("lastProfit");
-    const payoutElement = document.getElementById("lastPayout");
-
-    multiplierElement.textContent = `${multiplier.toFixed(2)}×`;
-
-    profitElement.textContent =
-        `${profit >= 0 ? "+" : ""}${money(profit)} USDT`;
-
-    profitElement.className =
-        profit > 0 ? "green" : profit < 0 ? "red" : "";
-
-    payoutElement.textContent = `${money(payout)} USDT`;
-}
-
-/* =========================================
-   GAME HISTORY
-========================================= */
+/* GAME HISTORY */
 
 function renderGameHistory() {
     const container = document.getElementById("gameHistory");
@@ -1579,9 +1409,7 @@ function addGameResult(result) {
     renderRecent();
 }
 
-/* =========================================
-   TOAST
-========================================= */
+/* TOAST */
 
 let toastTimeout;
 
@@ -1598,9 +1426,7 @@ function toast(message) {
     }, 2500);
 }
 
-/* =========================================
-   PLAY GAME
-========================================= */
+/* PLAY GAME */
 
 async function playGame() {
     if (busy) return;
@@ -1612,7 +1438,11 @@ async function playGame() {
         return;
     }
 
+    // Read the shared wallet again before checking the bet.
+    balance = readBalance();
+
     if (bet > balance) {
+        updateWallet();
         toast("Insufficient balance. Add virtual USDT in Laboratory.");
         return;
     }
@@ -1631,10 +1461,12 @@ async function playGame() {
     playButton.disabled = true;
     playButton.textContent = "BALL DROPPING...";
 
+    let betDeducted = false;
+
     try {
-        // Deduct the bet first
         balance = Math.round((balance - bet) * 100) / 100;
         saveBalance();
+        betDeducted = true;
 
         addWalletHistory("Plinko bet", bet, "debit");
 
@@ -1664,13 +1496,10 @@ async function playGame() {
         await animateBall(path);
 
         if (payout > 0) {
-            balance = Math.round((balance + payout) * 100) / 100;
+            balance = Math.round((readBalance() + payout) * 100) / 100;
             saveBalance();
-
             addWalletHistory("Plinko payout", payout, "credit");
         }
-
-        setResult(multiplier, profit, payout);
 
         document.getElementById("boardStatus").innerHTML =
             `Landed in slot ${bin + 1} · <strong>${multiplier.toFixed(2)}×</strong>`;
@@ -1696,7 +1525,6 @@ async function playGame() {
         saveFairState(fair);
 
         await updateFairDisplay();
-
         addGameResult(result);
 
         toast(
@@ -1707,7 +1535,18 @@ async function playGame() {
 
     } catch (error) {
         console.error(error);
-        toast("Something went wrong. Please reload and try again.");
+
+        /*
+          Refund the bet if the game fails before it finishes.
+        */
+        if (betDeducted) {
+            balance = Math.round((readBalance() + bet) * 100) / 100;
+            saveBalance();
+            addWalletHistory("Plinko bet refund", bet, "credit");
+        }
+
+        toast("Something went wrong. Your bet has been refunded.");
+
     } finally {
         busy = false;
         playButton.disabled = false;
@@ -1717,9 +1556,7 @@ async function playGame() {
 
 playButton.addEventListener("click", playGame);
 
-/* =========================================
-   CLIENT SEED
-========================================= */
+/* CLIENT SEED */
 
 document.getElementById("clientSeed").addEventListener("change", event => {
     if (busy) return;
@@ -1755,9 +1592,7 @@ document.getElementById("changeSeed").addEventListener("click", async () => {
     toast("New seed pair created.");
 });
 
-/* =========================================
-   REVEAL SEED
-========================================= */
+/* REVEAL SEED */
 
 document.getElementById("revealSeed").addEventListener("click", async () => {
     if (busy) return;
@@ -1770,9 +1605,7 @@ document.getElementById("revealSeed").addEventListener("click", async () => {
     toast("Current seed revealed.");
 });
 
-/* =========================================
-   VERIFY LAST ROUND
-========================================= */
+/* VERIFY LAST ROUND */
 
 document.getElementById("verifyRound").addEventListener("click", async () => {
     if (busy) return;
@@ -1817,9 +1650,7 @@ document.getElementById("verifyRound").addEventListener("click", async () => {
     }
 });
 
-/* =========================================
-   COPY HASH
-========================================= */
+/* COPY HASH */
 
 document.getElementById("copyHash").addEventListener("click", async () => {
     const hash = document.getElementById("serverHash").value;
@@ -1832,18 +1663,13 @@ document.getElementById("copyHash").addEventListener("click", async () => {
     }
 });
 
-/* =========================================
-   INITIALIZE
-========================================= */
+/* INITIALIZE */
 
 async function initialize() {
     updateWallet();
-
     drawBoard();
-
     renderRecent();
     renderGameHistory();
-
     await updateFairDisplay();
 }
 
