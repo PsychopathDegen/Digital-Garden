@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -383,6 +382,13 @@ button {
     background: #203541;
 }
 
+/* Anchor-based game card: kill default link styling */
+a.game-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
 .game-art {
     height: 160px;
     position: relative;
@@ -477,6 +483,14 @@ button {
 
 .favorite-btn.is-favorite {
     color: #ff6681;
+}
+
+/* Keep the favorite button above the link and unaffected by hover */
+.game-card .favorite-btn {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    line-height: 1;
 }
 
 .empty-state {
