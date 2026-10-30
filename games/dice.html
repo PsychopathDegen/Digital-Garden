@@ -6,17 +6,19 @@
 <title>Dice — PlayStake</title>
 <link rel="stylesheet" href="../styles.css" />
 <style>
-  body { background-color: #000; display: flex; justify-content: center; margin: 0; touch-action: pan-y; }
+  body { background-color: #000; display: flex; justify-content: center; margin: 0; touch-action: pan-y; font-family: 'Segoe UI', system-ui, sans-serif; }
   .app-container { max-width: 480px; width: 100%; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; position: relative; }
   .content-area { padding: 14px; flex: 1; padding-bottom: 90px; }
 
-  /* Top History Bar */
+  /* Top History Bar - Left to Right */
   .history-bar { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
   .history-pill {
     background: var(--panel); color: var(--text); font-weight: 700; font-size: 0.85rem;
     padding: 8px 16px; border-radius: 20px; min-width: 60px; text-align: center;
+    display: flex; align-items: center; justify-content: center;
   }
-  .history-pill.high { background: #00e701; color: #000; }
+  .history-pill.win { background: #00e701; color: #000; }
+  .history-pill.loss { background: var(--panel); color: var(--muted); }
 
   /* Game Panel */
   .game-panel {
@@ -24,21 +26,20 @@
     margin-bottom: 16px; display: flex; flex-direction: column; gap: 30px;
   }
 
-  /* --- Custom Slider with 3D Cube --- */
-  .slider-wrapper { position: relative; padding: 40px 10px 20px 10px; }
+  /* --- Custom Slider --- */
+  .slider-wrapper { position: relative; padding: 20px 10px 0 10px; }
   .slider-labels { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 12px; pointer-events: none;}
   
   .slider-track-container {
     height: 32px; background: var(--panel2); border-radius: 16px;
     position: relative; display: flex; align-items: center;
     padding: 0 4px; box-sizing: border-box; cursor: pointer;
-    touch-action: none; /* Prevents scrolling while dragging */
+    touch-action: none;
   }
   .slider-fill {
     position: absolute; top: 8px; bottom: 8px; left: 4px; right: 4px;
     border-radius: 8px; display: flex; overflow: hidden; pointer-events: none;
   }
-  /* Removed transitions to make it perfectly sync with the thumb without lag */
   .fill-red { background: #ff3b3b; height: 100%; position: absolute; left: 0; }
   .fill-green { background: #00e701; height: 100%; position: absolute; right: 0; }
   
@@ -53,15 +54,15 @@
   }
   .slider-handle::before { content: "❘❘❘"; color: #1e6b9e; font-size: 1.2rem; letter-spacing: -2px; pointer-events: none;}
   
-  /* The 3D Result Cube */
+  /* Floating Result Cube - Shows over the slider */
   .result-cube {
-    position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-    width: 60px; height: 60px; background: white;
+    position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+    width: 56px; height: 56px; background: white;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     display: flex; align-items: center; justify-content: center;
     font-weight: 900; font-size: 1.1rem; color: #ff3b3b;
     opacity: 0; pointer-events: none; z-index: 10;
-    transition: opacity 0.2s;
+    /* Removed transitions so it snaps instantly */
   }
   .result-cube::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -80,9 +81,7 @@
   }
   .input-box input {
     background: transparent; border: none; color: white;
-    font-size: 1rem; font-weight: 700; width: 100%; outline: none;
-    /* Prevent mobile keyboard zoom */
-    font-size: 16px; 
+    font-size: 16px; font-weight: 700; width: 100%; outline: none;
   }
   .input-box span { color: var(--muted); font-weight: 600; margin-left: 4px; }
   .swap-icon { color: var(--text); cursor: pointer; font-size: 1.2rem; margin-left: 4px; }
@@ -107,8 +106,7 @@
   }
   .main-input-box input {
     flex: 1; background: transparent; border: none; color: white;
-    padding: 0 14px; font-weight: 600; outline: none;
-    font-size: 16px; /* Prevent mobile zoom */
+    padding: 0 14px; font-weight: 600; outline: none; font-size: 16px;
   }
   .main-input-box .currency-icon { padding: 0 12px; color: #26A17B; font-size: 1.2rem; }
   
@@ -118,8 +116,6 @@
     padding: 0 16px; font-weight: 700; cursor: pointer; font-size: 0.95rem;
     border-left: 1px solid var(--border);
   }
-  .quick-btns button:hover { background: #2a3f50; }
-  .quick-btns button:first-child { border-left: none; }
 </style>
 </head>
 <body>
@@ -141,8 +137,14 @@
 
   <main class="content-area">
     
-    <!-- History Bar -->
-    <div class="history-bar" id="historyBar"></div>
+    <!-- History Bar (Left to Right) -->
+    <div class="history-bar" id="historyBar">
+      <div class="history-pill loss">-</div>
+      <div class="history-pill loss">-</div>
+      <div class="history-pill loss">-</div>
+      <div class="history-pill loss">-</div>
+      <div class="history-pill loss">-</div>
+    </div>
 
     <div class="game-panel">
       <div class="slider-wrapper">
@@ -156,9 +158,9 @@
             <div id="fillGreen" class="fill-green" style="width: 49.5%;"></div>
           </div>
           <div id="sliderHandle" class="slider-handle" style="left: 50.5%;">
+            <!-- Result Cube sits here -->
             <div id="resultCube" class="result-cube">50.00</div>
           </div>
-          <!-- No native input type=range, we handle dragging in JS -->
         </div>
       </div>
 
@@ -259,22 +261,22 @@
 
 <script src="../app.js"></script>
 <script>
-  let isUnder = false;
+  let isUnder = false; // Default Roll Over
   let isRolling = false;
   let currentMultiplier = 1.9800;
-  let rollHistory = [99.00, 12.50, 45.20, 88.10, 2.40];
   
-  // Exact limits
+  // History array starts empty
+  let rollHistory = [];
+
+  // Limits
   const MIN_ROLL = 0.01;
   const MAX_ROLL = 99.99;
 
-  // Master function to sync all inputs and visuals
   function updateUI(source, val = null) {
     if (isRolling) return;
     
     let chance, multiplier, rollOver;
 
-    // 1. Get values based on what changed
     if (source === 'slider') {
       rollOver = val;
     } else if (source === 'multiplier') {
@@ -302,12 +304,11 @@
       multiplier = 99 / chance;
     }
 
-    // 2. Clamp Roll Over
     if (rollOver < MIN_ROLL) rollOver = MIN_ROLL;
     if (rollOver > MAX_ROLL) rollOver = MAX_ROLL;
     chance = isUnder ? rollOver : (100 - rollOver);
 
-    // 3. Update DOM
+    // Update DOM
     document.getElementById('sliderHandle').style.left = rollOver + '%';
     document.getElementById('rollOverInput').value = rollOver.toFixed(2);
     document.getElementById('winChanceInput').value = chance.toFixed(4);
@@ -315,7 +316,7 @@
     
     currentMultiplier = multiplier;
 
-    // 4. Update Red/Green track synchronously
+    // Update Colors
     const fillRed = document.getElementById('fillRed');
     const fillGreen = document.getElementById('fillGreen');
     
@@ -331,7 +332,6 @@
     renderHistory();
   }
 
-  // Text input listeners
   function updateFromMultiplier() { updateUI('multiplier'); }
   function updateFromWinChance() { updateUI('winChance'); }
   function updateFromRollOver() { updateUI('rollOver'); }
@@ -360,40 +360,45 @@
   function renderHistory() {
     const bar = document.getElementById('historyBar');
     const targetVal = parseFloat(document.getElementById('rollOverInput').value);
-    bar.innerHTML = rollHistory.map(roll => {
-      const isWin = isUnder ? (roll < targetVal) : (roll > targetVal);
-      const colorClass = isWin ? 'high' : '';
-      return `<div class="history-pill ${colorClass}">${roll.toFixed(2)}</div>`;
-    }).join('');
+    
+    // Fill missing slots with "-"
+    let html = '';
+    for(let i = 0; i < 5; i++) {
+      if (i < rollHistory.length) {
+        const roll = rollHistory[i];
+        const isWin = isUnder ? (roll < targetVal) : (roll > targetVal);
+        const colorClass = isWin ? 'win' : 'loss';
+        html += `<div class="history-pill ${colorClass}">${roll.toFixed(2)}</div>`;
+      } else {
+        html += `<div class="history-pill loss">-</div>`;
+      }
+    }
+    bar.innerHTML = html;
   }
 
-  // --- Drag System (No Keyboard) ---
+  // --- Drag System ---
   const track = document.getElementById('trackContainer');
   const handle = document.getElementById('sliderHandle');
   let isDragging = false;
 
   function handleDrag(e) {
     if (isRolling || !isDragging) return;
-    e.preventDefault(); // Stop scrolling/keyboard
+    e.preventDefault(); 
     
     const rect = track.getBoundingClientRect();
-    // Get clientX from mouse or touch
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    
-    // Calculate percentage
     let percent = ((clientX - rect.left) / rect.width) * 100;
+    
     if (percent < MIN_ROLL) percent = MIN_ROLL;
     if (percent > MAX_ROLL) percent = MAX_ROLL;
     
     updateUI('slider', percent);
   }
 
-  // Mouse Events
   track.addEventListener('mousedown', (e) => { isDragging = true; handleDrag(e); });
   window.addEventListener('mousemove', handleDrag);
   window.addEventListener('mouseup', () => { isDragging = false; });
 
-  // Touch Events
   track.addEventListener('touchstart', (e) => { isDragging = true; handleDrag(e); }, {passive: false});
   window.addEventListener('touchmove', handleDrag, {passive: false});
   window.addEventListener('touchend', () => { isDragging = false; });
@@ -410,13 +415,18 @@
     isRolling = true;
     document.getElementById('betBtn').disabled = true;
     document.getElementById('betBtn').textContent = "Rolling...";
-    document.getElementById('resultCube').style.opacity = '0';
+    
+    const cube = document.getElementById('resultCube');
+    cube.style.opacity = '0'; // Hide old result
 
     const targetVal = parseFloat(document.getElementById('rollOverInput').value);
     const finalRoll = Math.random() * 100; 
-    const startPos = parseFloat(document.getElementById('rollOverInput').value);
+
+    // Stake Animation: The cube slides across the screen, NOT the slider.
+    // It starts at the slider's position and moves to the result.
+    const startX = parseFloat(document.getElementById('rollOverInput').value);
     
-    // Smooth ease-out animation
+    // We animate the cube's position from startX to finalRoll
     const duration = 600; // ms
     const startTime = performance.now();
 
@@ -425,22 +435,15 @@
       let progress = elapsed / duration;
       if (progress > 1) progress = 1;
       
-      // Ease out cubic: 1 - (1 - x)^3
+      // Ease out cubic
       const easeOut = 1 - Math.pow(1 - progress, 3);
       
-      const currentPos = startPos + (finalRoll - startPos) * easeOut;
+      // Calculate cube position
+      const currentX = startX + (finalRoll - startX) * easeOut;
       
-      // Update UI visually without recalculating everything
-      handle.style.left = currentPos + '%';
-      const fillRed = document.getElementById('fillRed');
-      const fillGreen = document.getElementById('fillGreen');
-      if (isUnder) {
-        fillGreen.style.width = currentPos + '%';
-        fillRed.style.width = (100 - currentPos) + '%';
-      } else {
-        fillRed.style.width = currentPos + '%';
-        fillGreen.style.width = (100 - currentPos) + '%';
-      }
+      // Move the cube across the screen
+      cube.style.left = currentX + '%';
+      cube.style.opacity = '1';
 
       if (progress < 1) {
         requestAnimationFrame(animate);
@@ -458,17 +461,33 @@
     if (isUnder) win = roll < targetVal;
     else win = roll > targetVal;
 
+    // Keep cube visible
     const cube = document.getElementById('resultCube');
     cube.textContent = roll.toFixed(2);
     cube.style.color = win ? '#00e701' : '#ff3b3b';
     cube.style.opacity = '1';
+    cube.style.left = roll + '%'; // Snap to exact result
 
-    rollHistory.pop();
+    // Add to history (Unshift adds to the beginning of the array)
     rollHistory.unshift(roll);
+    if (rollHistory.length > 5) rollHistory.pop(); // Keep max 5 items
     
-    // Put the slider exactly on the roll
-    updateUI('slider', roll);
+    // Re-render history without changing slider position
+    const bar = document.getElementById('historyBar');
+    let html = '';
+    for(let i = 0; i < 5; i++) {
+      if (i < rollHistory.length) {
+        const hRoll = rollHistory[i];
+        const isWin = isUnder ? (hRoll < targetVal) : (hRoll > targetVal);
+        const colorClass = isWin ? 'win' : 'loss';
+        html += `<div class="history-pill ${colorClass}">${hRoll.toFixed(2)}</div>`;
+      } else {
+        html += `<div class="history-pill loss">-</div>`;
+      }
+    }
+    bar.innerHTML = html;
 
+    // Payout
     const payout = win ? (betAmt * currentMultiplier) : 0;
     if (win) { state.balance += payout; playSound('win'); } 
     else { playSound('lose'); }
@@ -482,6 +501,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('betAmountInput').value = "0.00000000";
+    // Initialize at 50.50
     updateUI('slider', 50.50);
   });
 </script>
