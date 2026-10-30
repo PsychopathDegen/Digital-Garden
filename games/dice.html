@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Dice — PlayStake</title>
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  /* Specific styles for the Dice game */
+  .game-container {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px; max-width: 480px; margin: 0 auto; width: 100%;
+  }
+  
+  .game-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .game-title { font-size: 1.2rem; font-weight: 800; }
+  .back-btn { background: var(--panel2); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+
+  /* The big Dice display area */
+  .dice-display {
+    width: 100%; height: 120px; background: var(--panel); border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border: 1px solid var(--border); margin-bottom: 30px; position: relative;
+    overflow: hidden;
+  }
+  .dice-result-text { font-size: 2.5rem; font-weight: 900; z-index: 2; }
+  .dice-result-text.win { color: var(--accent); }
+  .dice-result-text.loss { color: var(--danger); }
+  .dice-rolling {
+    position: absolute; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%); animation: shine 0.6s infinite;
+  }
+  @keyframes shine { to { transform: translateX(100%); } }
+
+  /* The Slider */
+  .slider-container { width: 100%; margin-bottom: 30px; position: relative; }
+  .slider-track {
+    height: 30px; background: var(--panel2); border-radius: 15px; position: relative;
+    overflow: hidden; display: flex;
+  }
+  .slider-win-zone { height: 100%; background: var(--accent); opacity: 0.3; position: absolute; transition: 0.1s; }
+  .slider-marker {
+    position: absolute; top: -5px; width: 4px; height: 40px; background: white;
+    border-radius: 2px; transform: translateX(-50%); transition: 0.1s; z-index: 5;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  }
+  input[type=range] {
+    width: 100%; position: absolute; top: 0; left: 0; height: 30px; opacity: 0; cursor: pointer; z-index: 10;
+  }
+
+  /* Controls */
+  .control-row { width: 100%; display: flex; justify-content: space-between; gap: 10px; margin-bottom: 15px; }
+  .control-box {
+    flex: 1; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px;
+  }
+  .control-box label { display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+  .control-box input {
+    width: 100%; background: transparent; border: none; color: white;
+    font-size: 1rem; font-weight: 700; outline: none;
+  }
+  
+  .quick-bet-row { display: flex; gap: 8px; width: 100%; margin-bottom: 20px; }
+  .quick-bet-row button {
+    flex: 1; background: var(--panel2); border: none; color: var(--text);
+    padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer;
+  }
+  .quick-bet-row button:hover { background: var(--border); }
+
+  .play-btn {
+    width: 100%; padding: 16px; border-radius: 10px; border: none;
+    background: var(--accent); color: #000; font-size: 1.1rem; font-weight: 900;
+    cursor: pointer; transition: 0.1s; text-transform: uppercase;
+  }
+  .play-btn:active { transform: scale(0.98); }
+
+  /* Bottom controls toggles */
+  .win-lose-toggle { display: flex; background: var(--panel); border-radius: 8px; padding: 4px; margin-bottom: 20px; width: 100%; }
+  .toggle-btn { flex: 1; background: transparent; border: none; color: var(--muted); padding: 10px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+  .toggle-btn.active { background: var(--panel2); color: white; }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Top Header -->
+  <header class="topbar">
+    <div class="brand" onclick="location.href='../index.html'">S</div>
+    
+    <div class="balance-pill" onclick="openDeposit()">
+      <span id="balanceDisplay">0.00000000</span>
+      <span class="coin">₮</span>
+      <span class="dropdown-arrow">⌄</span>
+    </div>
+
+    <div class="top-actions">
+      <button class="icon-btn wallet-blue" onclick="openWallet()">💼</button>
+    </div>
+  </header>
+
+  <main class="content-area">
+    <div class="game-header">
+      <div class="game-title">🎲 Dice</div>
+      <button class="back-btn" onclick="location.href='../index.html'">Lobby</button>
+    </div>
+
+    <div class="game-container">
+      
+      <!-- Display Result -->
+      <div class="dice-display">
+        <div id="rollingAnim" class="dice-rolling" style="display:none;"></div>
+        <div id="resultText" class="dice-result-text">50.00</div>
+      </div>
+
+      <!-- Slider -->
+      <div class="slider-container">
+        <div class="slider-track">
+          <div id="winZone" class="slider-win-zone" style="left: 0; width: 50%;"></div>
+          <div id="marker" class="slider-marker" style="left: 50%;"></div>
+        </div>
+        <input type="range" id="diceSlider" min="2" max="98" value="50" oninput="updateSlider()" />
+      </div>
+
+      <!-- Bet & Multiplier Inputs -->
+      <div class="control-row">
+        <div class="control-box">
+          <label>Bet Amount</label>
+          <input type="number" id="betAmount" value="10.00" step="0.01" />
+        </div>
+        <div class="control-box">
+          <label>Multiplier</label>
+          <input type="text" id="multiplierDisplay" value="1.98x" readonly />
+        </div>
+      </div>
+
+      <!-- Quick Bets -->
+      <div class="quick-bet-row">
+        <button onclick="setBet('min')">Min</button>
+        <button onclick="setBet('half')">½</button>
+        <button onclick="setBet('double')">2x</button>
+        <button onclick="setBet('max')">Max</button>
+      </div>
+
+      <!-- Win/Lose Toggle -->
+      <div class="win-lose-toggle">
+        <button id="btnUnder" class="toggle-btn active" onclick="setMode('under')">Roll Under</button>
+        <button id="btnOver" class="toggle-btn" onclick="setMode('over')">Roll Over</button>
+      </div>
+
+      <!-- Play Button -->
+      <button id="playBtn" class="play-btn" onclick="playDice()">Roll Dice</button>
+
+    </div>
+  </main>
+</div>
+
+<!-- Modals (Same as index) -->
+<div class="modal-overlay" id="depositModal">
+  <div class="modal">
+    <div class="modal-head"><h2>Deposit USDT</h2><button class="close" onclick="closeDeposit()">✕</button></div>
+    <div class="modal-body">
+      <label class="lbl">Network</label>
+      <select id="networkSelect" class="input"><option>TRC20 (Tron)</option><option>ERC20 (Ethereum)</option></select>
+      <label class="lbl">Deposit address</label>
+      <div class="addr-row"><code id="fakeAddress">TXk9...fake...9Qz</code><button class="btn ghost small" onclick="copyAddress()">Copy</button></div>
+      <div class="qr-wrap"><canvas id="qrCanvas" width="140" height="140"></canvas><p class="muted tiny">Scan (fake)</p></div>
+      <label class="lbl">Amount to credit (USDT)</label>
+      <input type="number" id="depositAmount" class="input" placeholder="e.g. 1000" />
+      <button class="btn wide" onclick="confirmDeposit()">I've paid — Confirm deposit</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="walletModal">
+  <div class="modal wide-modal">
+    <div class="modal-head"><h2>Wallet & Stats</h2><button class="close" onclick="closeWallet()">✕</button></div>
+    <div class="modal-body">
+      <div class="stats-grid">
+        <div class="stat"><span id="statBets">0</span><small>Total bets</small></div>
+        <div class="stat"><span id="statWagered">0.00</span><small>Wagered</small></div>
+        <div class="stat"><span id="statProfit">0.00</span><small>Net profit</small></div>
+      </div>
+      <h3 class="hist-title">Bet history</h3>
+      <div class="history-list" id="historyList"></div>
+      <div class="wallet-actions">
+        <button class="btn ghost small" onclick="resetBalance()">Reset balance</button>
+        <button class="btn ghost small" onclick="clearHistory()">Clear history</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../app.js"></script>
+<script>
+  let mode = 'under'; // 'under' or 'over'
+  let target = 50;
+  let isRolling = false;
+
+  // Initialize Game
+  document.addEventListener('DOMContentLoaded', () => {
+    updateSlider();
+  });
+
+  function setMode(newMode) {
+    if (isRolling) return;
+    mode = newMode;
+    document.getElementById('btnUnder').classList.toggle('active', mode === 'under');
+    document.getElementById('btnOver').classList.toggle('active', mode === 'over');
+    
+    // Invert target if switching modes for better UX
+    target = 100 - target;
+    document.getElementById('diceSlider').value = target;
+    updateSlider();
+  }
+
+  function updateSlider() {
+    if (isRolling) return;
+    target = parseFloat(document.getElementById('diceSlider').value);
+    
+    // Update Marker Position
+    const marker = document.getElementById('marker');
+    marker.style.left = target + '%';
+
+    // Update Win Zone
+    const winZone = document.getElementById('winZone');
+    if (mode === 'under') {
+      winZone.style.left = '0%';
+      winZone.style.width = target + '%';
+    } else {
+      winZone.style.left = target + '%';
+      winZone.style.width = (100 - target) + '%';
+    }
+
+    // Calculate Multiplier (Stake uses a 1% house edge)
+    // Under: 99 / target. Over: 99 / (100 - target)
+    let winChance = mode === 'under' ? target : (100 - target);
+    let multiplier = 99 / winChance;
+    
+    // Format multiplier
+    document.getElementById('multiplierDisplay').value = multiplier.toFixed(4) + 'x';
+    
+    // Store multiplier globally for the roll function
+    window.currentMultiplier = multiplier;
+  }
+
+  function setBet(type) {
+    if (isRolling) return;
+    const input = document.getElementById('betAmount');
+    let current = parseFloat(input.value) || 0;
+    
+    if (type === 'min') current = 0.01;
+    else if (type === 'half') current = current / 2;
+    else if (type === 'double') current = current * 2;
+    else if (type === 'max') current = state.balance;
+    
+    if (current > state.balance) current = state.balance;
+    if (current < 0.01) current = 0.01;
+    
+    input.value = current.toFixed(2);
+  }
+
+  function playDice() {
+    if (isRolling) return;
+
+    const betAmt = parseFloat(document.getElementById('betAmount').value);
+    
+    // Validate bet
+    if (!betAmt || betAmt <= 0) { flash("Invalid bet amount"); return; }
+    if (betAmt > state.balance) { flash("Insufficient balance"); return; }
+    
+    // Deduct balance
+    if (!placeBet('Dice', betAmt)) return;
+
+    // Start Roll
+    isRolling = true;
+    const playBtn = document.getElementById('playBtn');
+    playBtn.disabled = true;
+    playBtn.textContent = "Rolling...";
+    document.getElementById('rollingAnim').style.display = 'block';
+    document.getElementById('resultText').style.opacity = '0.5';
+    
+    // Provably Fair logic (Cosmetic)
+    const seeds = getSeeds('dice');
+    const nonce = nextNonce('dice');
+    // Simulate a random roll between 0.00 and 99.99
+    const roll = (Math.random() * 100).toFixed(2);
+    
+    setTimeout(() => {
+      // Stop Roll
+      isRolling = false;
+      playBtn.disabled = false;
+      playBtn.textContent = "Roll Dice";
+      document.getElementById('rollingAnim').style.display = 'none';
+      document.getElementById('resultText').style.opacity = '1';
+
+      // Determine Win/Loss
+      const rollNum = parseFloat(roll);
+      let win = false;
+      
+      if (mode === 'under') {
+        win = rollNum < target;
+      } else {
+        win = rollNum > target;
+      }
+
+      // Update Display
+      const resultText = document.getElementById('resultText');
+      resultText.textContent = roll;
+      resultText.className = 'dice-result-text ' + (win ? 'win' : 'loss');
+
+      // Calculate Payout
+      const payout = win ? (betAmt * window.currentMultiplier) : 0;
+      
+      if (win) {
+        state.balance += payout;
+        playSound('win');
+      } else {
+        playSound('lose');
+      }
+
+      // Record in DB & Update VIP
+      recordBet({
+        game: 'Dice',
+        amount: betAmt,
+        payout: payout,
+        win: win
+      });
+
+    }, 600); // 600ms animation duration
+  }
+</script>
+</body>
+</html>
