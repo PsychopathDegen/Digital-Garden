@@ -1097,7 +1097,7 @@ function addWalletHistory(description, amount, type) {
 
     account.history.unshift({
         id: Date.now() + Math.random(),
-        type,                 // "debit" | "credit"
+        type,                 
         description,
         amount: Number(amount),
         date: new Date().toISOString()
@@ -1432,10 +1432,10 @@ function animateBall(path) {
         for (let step = 0; step < path.length; step++) {
             position += path[step] === 1 ? 1 : -1;
 
-            const x = geo.center + position * geo.pegGap / 2;
-            const y = geo.topY + step * geo.rowGap + 12;
+            const x = geo.center + position * geo.pegGap / 2
+                        const y = geo.topY + step * geo.rowGap + 12;
 
-            ball.setAttribute("cx", x
+            ball.setAttribute("cx", x);
             ball.setAttribute("cy", y);
 
             await sleep(95);
