@@ -11,54 +11,91 @@ const state = {
 };
 
 const $ = (selector) => document.querySelector(selector);
-
-const $$ = (selector) => [
-    ...document.querySelectorAll(selector)
-];
+const $$ = (selector) => [...document.querySelectorAll(selector)];
 
 
 // ===================================
-// LOCAL STORAGE
+// SHARED ACCOUNT STORAGE
 // ===================================
+
+function normalizeAccount(data = {}) {
+    return {
+        balance: Math.max(0, Number(data.balance) || 0),
+        favorites: Array.isArray(data.favorites) ? data.favorites : [],
+        history: Array.isArray(data.history) ? data.history : []
+    };
+}
 
 function loadAccount() {
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
-
         if (!saved) return;
 
-        const data = JSON.parse(saved);
-
-        state.balance = Math.max(
-            0,
-            Number(data.balance) || 0
-        );
-
-        state.favorites = Array.isArray(data.favorites)
-            ? data.favorites
-            : [];
-
-        state.history = Array.isArray(data.history)
-            ? data.history
-            : [];
-
+        Object.assign(state, normalizeAccount(JSON.parse(saved)));
     } catch (error) {
         console.error("Account loading error:", error);
     }
 }
 
-
 function saveAccount() {
     try {
         localStorage.setItem(
             STORAGE_KEY,
-            JSON.stringify(state)
+            JSON.stringify({
+                balance: state.balance,
+                favorites: state.favorites,
+                history: state.history
+            })
         );
     } catch (error) {
         console.error("Account saving error:", error);
         showToast("Could not save account data.");
     }
 }
+
+// Public interface for individual games.
+// Games should use these methods instead of creating another wallet key.
+window.VaultPlayAccount = {
+    storageKey: STORAGE_KEY,
+
+    get() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            return normalizeAccount(saved ? JSON.parse(saved) : {});
+        } catch (error) {
+            console.error("Could not read shared account:", error);
+            return normalizeAccount();
+        }
+    },
+
+    updateBalance(newBalance, historyEntry = null) {
+        const account = this.get();
+
+        account.balance = Math.max(0, Number(newBalance) || 0);
+
+        if (historyEntry) {
+            account.history.unshift(historyEntry);
+        }
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(account));
+
+        Object.assign(state, account);
+        updateBalance();
+
+        return account;
+    },
+
+    addHistory(historyEntry) {
+        const account = this.get();
+
+        account.history.unshift(historyEntry);
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(account));
+
+        Object.assign(state, account);
+        return account;
+    }
+};
 
 
 // ===================================
@@ -72,11 +109,27 @@ function formatUSDT(amount) {
     });
 }
 
-
 function updateBalance() {
-    $("#balance").textContent =
-        formatUSDT(state.balance);
+    const balanceElement = $("#balance");
+
+    if (balanceElement) {
+        balanceElement.textContent = formatUSDT(state.balance);
+    }
 }
+
+
+// Keep the lobby updated if a game changes the wallet in another tab.
+window.addEventListener("storage", (event) => {
+    if (event.key !== STORAGE_KEY || !event.newValue) return;
+
+    try {
+        Object.assign(state, normalizeAccount(JSON.parse(event.newValue)));
+        updateBalance();
+        applyFilters();
+    } catch (error) {
+        console.error("Account synchronization error:", error);
+    }
+});
 
 
 // ===================================
@@ -87,6 +140,7 @@ let toastTimer;
 
 function showToast(message) {
     const toast = $("#toast");
+    if (!toast) return;
 
     toast.textContent = message;
     toast.classList.remove("hidden");
@@ -104,127 +158,67 @@ function showToast(message) {
 // ===================================
 
 function openDeposit() {
-    $("#depositModal").classList.remove("hidden");
-    $("#depositAmount").focus();
+    $("#depositModal")?.classList.remove("hidden");
+    $("#depositAmount")?.focus();
 }
-
 
 function closeDeposit() {
-    $("#depositModal").classList.add("hidden");
-    $("#depositError").classList.add("hidden");
+    $("#depositModal")?.classList.add("hidden");
+    $("#depositError")?.classList.add("hidden");
 }
 
-
 function virtualDeposit() {
-
     const input = $("#depositAmount");
+    if (!input) return;
 
     const amount = Number(input.value);
 
-    // Validate amount
-
-    if (
-        !Number.isFinite(amount) ||
-        amount <= 0
-    ) {
-        $("#depositError").classList.remove("hidden");
+    if (!Number.isFinite(amount) || amount <= 0) {
+        $("#depositError")?.classList.remove("hidden");
         input.focus();
         return;
     }
 
-    // Add virtual USDT
-
     state.balance += amount;
-
-    // Record transaction
 
     state.history.unshift({
         type: "deposit",
-        amount: amount,
+        amount,
         date: new Date().toISOString()
     });
 
-    // Save account
-
     saveAccount();
-
-    // Update interface
-
     updateBalance();
 
     input.value = "";
-
     closeDeposit();
 
-    showToast(
-        `${formatUSDT(amount)} virtual USDT added successfully`
-    );
+    showToast(`${formatUSDT(amount)} virtual USDT added successfully`);
 }
 
-
 function initializeDeposit() {
+    $("#depositButton")?.addEventListener("click", openDeposit);
+    $("#sidebarDeposit")?.addEventListener("click", openDeposit);
+    $("#closeModal")?.addEventListener("click", closeDeposit);
+    $("#confirmDeposit")?.addEventListener("click", virtualDeposit);
 
-    $("#depositButton").addEventListener(
-        "click",
-        openDeposit
-    );
-
-    $("#sidebarDeposit").addEventListener(
-        "click",
-        openDeposit
-    );
-
-    $("#closeModal").addEventListener(
-        "click",
-        closeDeposit
-    );
-
-    $("#confirmDeposit").addEventListener(
-        "click",
-        virtualDeposit
-    );
-
-    // Close modal by clicking outside
-
-    $("#depositModal").addEventListener(
-        "click",
-        (event) => {
-            if (event.target === $("#depositModal")) {
-                closeDeposit();
-            }
+    $("#depositModal")?.addEventListener("click", (event) => {
+        if (event.target === $("#depositModal")) {
+            closeDeposit();
         }
-    );
-
-    // Enter key confirms deposit
-
-    $("#depositAmount").addEventListener(
-        "keydown",
-        (event) => {
-            if (event.key === "Enter") {
-                virtualDeposit();
-            }
-
-            if (event.key === "Escape") {
-                closeDeposit();
-            }
-        }
-    );
-
-    // Quick deposit buttons
-
-    $$(".quick-amounts button").forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            $("#depositAmount").value =
-                button.dataset.amount;
-
-            $("#depositError").classList.add("hidden");
-
-        });
-
     });
 
+    $("#depositAmount")?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") virtualDeposit();
+        if (event.key === "Escape") closeDeposit();
+    });
+
+    $$(".quick-amounts button").forEach(button => {
+        button.addEventListener("click", () => {
+            $("#depositAmount").value = button.dataset.amount;
+            $("#depositError")?.classList.add("hidden");
+        });
+    });
 }
 
 
@@ -233,59 +227,38 @@ function initializeDeposit() {
 // ===================================
 
 function initializeFavorites() {
-
     $$(".favorite-btn").forEach(button => {
-
         const card = button.closest(".game-card");
+        if (!card) return;
 
         const gameName = card.dataset.name;
 
         function updateFavoriteButton() {
+            const favorite = state.favorites.includes(gameName);
 
-            const favorite =
-                state.favorites.includes(gameName);
-
-            button.classList.toggle(
-                "is-favorite",
-                favorite
-            );
-
-            button.textContent =
-                favorite ? "♥" : "♡";
-
+            button.classList.toggle("is-favorite", favorite);
+            button.textContent = favorite ? "♥" : "♡";
         }
 
         updateFavoriteButton();
 
         button.addEventListener("click", (event) => {
-
-            // Stop the click from following the card's <a href>
             event.preventDefault();
             event.stopPropagation();
 
-            const index =
-                state.favorites.indexOf(gameName);
+            const index = state.favorites.indexOf(gameName);
 
             if (index !== -1) {
-
                 state.favorites.splice(index, 1);
-
             } else {
-
                 state.favorites.push(gameName);
-
             }
 
             saveAccount();
-
             updateFavoriteButton();
-
             applyFilters();
-
         });
-
     });
-
 }
 
 
@@ -295,97 +268,55 @@ function initializeFavorites() {
 
 let activeCategory = "all";
 
-
 function applyFilters() {
+    const searchInput = $("#gameSearch");
+    const emptyState = $("#emptyState");
 
-    const searchTerm =
-        $("#gameSearch").value
-            .trim()
-            .toLowerCase();
+    if (!searchInput) return;
 
+    const searchTerm = searchInput.value.trim().toLowerCase();
     let visibleGames = 0;
 
     $$(".game-card").forEach(card => {
+        const name = (card.dataset.name || "").toLowerCase();
+        const category = card.dataset.category;
 
-        const name =
-            card.dataset.name.toLowerCase();
-
-        const category =
-            card.dataset.category;
-
-        const matchesSearch =
-            name.includes(searchTerm);
+        const matchesSearch = name.includes(searchTerm);
 
         let matchesCategory = true;
 
         if (activeCategory === "originals") {
-
-            matchesCategory =
-                category === "originals";
-
+            matchesCategory = category === "originals";
         } else if (activeCategory === "table") {
-
-            matchesCategory =
-                category === "table";
-
+            matchesCategory = category === "table";
         } else if (activeCategory === "favorites") {
-
-            matchesCategory =
-                state.favorites.includes(card.dataset.name);
-
+            matchesCategory = state.favorites.includes(card.dataset.name);
         }
 
-        const visible =
-            matchesSearch && matchesCategory;
+        const visible = matchesSearch && matchesCategory;
 
-        card.classList.toggle(
-            "hidden",
-            !visible
-        );
+        card.classList.toggle("hidden", !visible);
 
-        if (visible) {
-            visibleGames++;
-        }
-
+        if (visible) visibleGames++;
     });
 
-    $("#emptyState").classList.toggle(
-        "hidden",
-        visibleGames > 0
-    );
-
+    emptyState?.classList.toggle("hidden", visibleGames > 0);
 }
 
-
 function initializeFilters() {
-
-    $("#gameSearch").addEventListener(
-        "input",
-        applyFilters
-    );
+    $("#gameSearch")?.addEventListener("input", applyFilters);
 
     $$(".category").forEach(button => {
-
         button.addEventListener("click", () => {
-
-            activeCategory =
-                button.dataset.category;
+            activeCategory = button.dataset.category;
 
             $$(".category").forEach(category => {
-
-                category.classList.toggle(
-                    "active",
-                    category === button
-                );
-
+                category.classList.toggle("active", category === button);
             });
 
             applyFilters();
-
         });
-
     });
-
 }
 
 
@@ -394,64 +325,40 @@ function initializeFilters() {
 // ===================================
 
 function initializeNavigation() {
-
     $$(".nav-item[data-view]").forEach(button => {
-
         button.addEventListener("click", () => {
-
             const view = button.dataset.view;
 
             $$(".nav-item[data-view]").forEach(item => {
-
-                item.classList.toggle(
-                    "active",
-                    item === button
-                );
-
+                item.classList.toggle("active", item === button);
             });
 
             if (view === "originals") {
-
                 activeCategory = "originals";
                 $("#pageTitle").textContent = "Originals";
-
             } else if (view === "favorites") {
-
                 activeCategory = "favorites";
                 $("#pageTitle").textContent = "Favorites";
-
             } else {
-
                 activeCategory = "all";
-                $("#pageTitle").textContent = "Casino";
-
+                $("#pageTitle").textContent = "Laboratory";
             }
 
             $$(".category").forEach(category => {
-
                 category.classList.toggle(
                     "active",
                     category.dataset.category === activeCategory
                 );
-
             });
 
             applyFilters();
-
-            $("#sidebar").classList.remove("open");
-
+            $("#sidebar")?.classList.remove("open");
         });
-
     });
 
-    // Mobile menu
-
-    $("#mobileMenu").addEventListener("click", () => {
-
-        $("#sidebar").classList.toggle("open");
-
+    $("#mobileMenu")?.addEventListener("click", () => {
+        $("#sidebar")?.classList.toggle("open");
     });
-
 }
 
 
@@ -460,29 +367,17 @@ function initializeNavigation() {
 // ===================================
 
 function initializeApp() {
-
     loadAccount();
-
     updateBalance();
 
     initializeDeposit();
-
     initializeFavorites();
-
     initializeFilters();
-
     initializeNavigation();
 
     applyFilters();
 
     console.log("VaultPlay initialized successfully.");
-
 }
 
-
-// Start application
-
-document.addEventListener(
-    "DOMContentLoaded",
-    initializeApp
-);
+document.addEventListener("DOMContentLoaded", initializeApp);
