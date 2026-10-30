@@ -1,184 +1,201 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VaultPlay | Plinko</title>
-  <meta name="theme-color" content="#111419">
-
+  <meta name="theme-color" content="#101419">
+  <title>VaultPlay — Originals Casino</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="plinko.css">
-
-  <script src="plinko.js" defer></script>
   <script src="app.js" defer></script>
 </head>
-
 <body>
-  <header class="topbar">
-    <a href="index.html" class="brand">VAULT<span>PLAY</span></a>
 
-    <div class="topbar-right">
-      <div class="balance-display">
-        <span>Balance</span>
-        <strong id="balance">0.00 USDT</strong>
+  <header class="topbar">
+    <button class="mobile-menu" id="mobile-menu" aria-label="Open menu">☰</button>
+
+    <a class="brand" href="#" data-page="casino">
+      <span class="brand-mark">V</span>
+      <span>VAULT<span class="brand-green">PLAY</span></span>
+    </a>
+
+    <div class="header-search">
+      <span>⌕</span>
+      <input id="search-input" type="search" placeholder="Search games...">
+      <kbd>/</kbd>
+    </div>
+
+    <div class="header-actions">
+      <div class="wallet-display">
+        <span class="wallet-icon">◈</span>
+        <strong id="header-balance">0.00</strong>
+        <small>USDT</small>
       </div>
-      <button id="deposit-button" class="deposit-button">
-        Deposit
-      </button>
+      <button class="btn-deposit" id="open-deposit">＋ Deposit</button>
     </div>
   </header>
 
-  <div class="main-layout">
-    <aside class="sidebar">
-      <nav>
-        <a href="index.html">Casino</a>
-        <a href="index.html">Originals</a>
-        <a href="#" class="active">Plinko</a>
-        <a href="index.html">Favorites</a>
-        <a href="index.html">Bet History</a>
-      </nav>
+  <div class="app-layout">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">MENU</div>
+        <button class="nav-item active" data-page="casino">
+          <span>⌂</span> Casino
+        </button>
+        <button class="nav-item" data-page="originals">
+          <span>♛</span> Originals
+        </button>
+        <button class="nav-item" data-page="favorites">
+          <span>♡</span> Favorites
+        </button>
+        <button class="nav-item" data-page="history">
+          <span>◷</span> Bet History
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">GAME CATEGORIES</div>
+        <button class="nav-item category-nav" data-category="all">
+          <span>▦</span> All games
+        </button>
+        <button class="nav-item category-nav" data-category="instant">
+          <span>⚡</span> Instant games
+        </button>
+        <button class="nav-item category-nav" data-category="table">
+          <span>♠</span> Table games
+        </button>
+        <button class="nav-item category-nav" data-category="slots">
+          <span>✦</span> Special games
+        </button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="demo-notice">
+          <span class="demo-dot"></span>
+          <div>
+            <strong>Demo mode</strong>
+            <small>Virtual USDT only</small>
+          </div>
+        </div>
+        <div class="sidebar-version">VAULTPLAY v1.0</div>
+      </div>
     </aside>
 
     <main class="main-content">
-      <div class="game-breadcrumb">
-        Casino / Originals / Plinko
+
+      <section class="welcome-banner">
+        <div class="welcome-content">
+          <div class="welcome-tag">THE ORIGINALS COLLECTION</div>
+          <h1>Welcome to <span>VaultPlay.</span></h1>
+          <p>Play your favorite originals. Every round is yours to explore.</p>
+          <button class="banner-button" id="explore-games">
+            Explore games <span>→</span>
+          </button>
+        </div>
+        <div class="banner-art" aria-hidden="true">
+          <div class="art-circle circle-one"></div>
+          <div class="art-circle circle-two"></div>
+          <div class="art-diamond">◆</div>
+          <div class="art-glow"></div>
+        </div>
+      </section>
+
+      <div class="content-heading" id="games-heading">
+        <div>
+          <div class="section-eyebrow">VAULTPLAY EXCLUSIVES</div>
+          <h2 id="page-title">Originals</h2>
+          <p id="page-subtitle">Explore our collection of original games.</p>
+        </div>
+        <div class="game-count" id="game-count">18 GAMES</div>
       </div>
 
-      <div id="plinko-game">
-        <p>Loading Plinko...</p>
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-chip selected" data-filter="all">All games</button>
+        <button class="filter-chip" data-filter="instant">Instant</button>
+        <button class="filter-chip" data-filter="table">Table</button>
+        <button class="filter-chip" data-filter="slots">Special</button>
       </div>
+
+      <section class="game-grid" id="game-grid"></section>
+
+      <section class="empty-state hidden" id="empty-state">
+        <div class="empty-icon">⌕</div>
+        <h3>No games found</h3>
+        <p>Try another search or category.</p>
+        <button class="secondary-button" id="clear-search">Clear search</button>
+      </section>
+
+      <section class="history-section hidden" id="history-section">
+        <div class="history-header">
+          <div>
+            <h2>Bet history</h2>
+            <p>Your recent VaultPlay game activity.</p>
+          </div>
+          <button class="secondary-button" id="clear-history">Clear history</button>
+        </div>
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>GAME</th>
+                <th>DATE</th>
+                <th>BET</th>
+                <th>MULTIPLIER</th>
+                <th>PAYOUT</th>
+                <th>PROFIT</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+        <div class="history-empty" id="history-empty">
+          No bets yet. Your game activity will appear here.
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <div class="footer-brand">VAULT<span>PLAY</span></div>
+        <p>A private entertainment simulator. Virtual balances have no cash value.</p>
+        <span>© 2026 VaultPlay</span>
+      </footer>
+
     </main>
   </div>
 
-  <!-- Deposit modal -->
-  <div id="deposit-modal" class="modal hidden">
-    <div class="modal-content">
-      <button id="close-deposit" class="modal-close">×</button>
+  <!-- Virtual deposit modal -->
+  <div class="modal-overlay hidden" id="deposit-modal">
+    <div class="modal">
+      <button class="modal-close" id="close-deposit" aria-label="Close">×</button>
+      <div class="modal-icon">◈</div>
+      <div class="modal-eyebrow">VAULTPLAY WALLET</div>
+      <h2>Add virtual funds</h2>
+      <p class="modal-description">
+        Add simulator credits to your VaultPlay balance.
+        No real money or cryptocurrency is involved.
+      </p>
 
-      <h2>Virtual Deposit</h2>
-      <p>This is a simulator. No real money is deposited.</p>
+      <label for="deposit-amount">AMOUNT</label>
+      <div class="amount-input-wrap">
+        <input id="deposit-amount" type="number" min="0.01"
+          step="0.01" placeholder="0.00">
+        <span>USDT</span>
+      </div>
 
-      <label for="deposit-amount">Amount (USDT)</label>
-      <input
-        type="number"
-        id="deposit-amount"
-        min="1"
-        step="0.01"
-        placeholder="Enter amount"
-      >
-
-      <div class="deposit-quick">
+      <div class="quick-amounts">
         <button data-amount="10">10</button>
         <button data-amount="50">50</button>
         <button data-amount="100">100</button>
         <button data-amount="500">500</button>
       </div>
 
-      <button id="confirm-deposit">Add virtual balance</button>
+      <button class="confirm-deposit" id="confirm-deposit">
+        Add to balance
+      </button>
+      <div class="modal-footnote">SIMULATED FUNDS · NO PAYMENT REQUIRED</div>
     </div>
   </div>
 
-  <script>
-    /*
-      Standalone wallet integration.
-      Balance is stored locally in this browser.
-    */
+  <div class="toast-container" id="toast-container"></div>
 
-    const WALLET_KEY = "vaultplay-account-v1";
-
-    let currentBalance = 0;
-
-    function loadWallet() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(WALLET_KEY));
-        currentBalance = Number(saved?.balance) || 0;
-      } catch {
-        currentBalance = 0;
-      }
-
-      updateBalanceDisplay();
-    }
-
-    function updateBalance(newBalance) {
-      currentBalance = Math.max(0, Number(newBalance) || 0);
-
-      localStorage.setItem(
-        WALLET_KEY,
-        JSON.stringify({ balance: currentBalance })
-      );
-
-      updateBalanceDisplay();
-    }
-
-    function updateBalanceDisplay() {
-      const balanceElement = document.getElementById("balance");
-
-      if (balanceElement) {
-        balanceElement.textContent =
-          currentBalance.toFixed(2) + " USDT";
-      }
-    }
-
-    function openDeposit() {
-      document.getElementById("deposit-modal").classList.remove("hidden");
-    }
-
-    function closeDeposit() {
-      document.getElementById("deposit-modal").classList.add("hidden");
-    }
-
-    document.getElementById("deposit-button").addEventListener(
-      "click", openDeposit
-    );
-
-    document.getElementById("close-deposit").addEventListener(
-      "click", closeDeposit
-    );
-
-    document.querySelectorAll("[data-amount]").forEach(button => {
-      button.addEventListener("click", () => {
-        document.getElementById("deposit-amount").value =
-          button.dataset.amount;
-      });
-    });
-
-    document.getElementById("confirm-deposit").addEventListener(
-      "click", () => {
-        const amount = Number(
-          document.getElementById("deposit-amount").value
-        );
-
-        if (!Number.isFinite(amount) || amount <= 0) {
-          alert("Enter a valid amount.");
-          return;
-        }
-
-        updateBalance(currentBalance + amount);
-        document.getElementById("deposit-amount").value = "";
-        closeDeposit();
-      }
-    );
-
-    // Load saved balance before starting the game.
-    loadWallet();
-
-    // Start Plinko using the same wallet as the deposit system.
-    window.addEventListener("DOMContentLoaded", () => {
-      if (typeof window.mountPlinko !== "function") {
-        document.getElementById("plinko-game").innerHTML =
-          "<p>Plinko could not load. Check that plinko.js exists.</p>";
-        return;
-      }
-
-      window.mountPlinko(
-        document.getElementById("plinko-game"),
-        {
-          getBalance: () => currentBalance,
-          setBalance: (newBalance) => updateBalance(newBalance)
-        }
-      );
-    });
-  </script>
 </body>
 </html>
