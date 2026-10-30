@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -819,7 +820,7 @@ a {
     </a>
 
     <div class="topbar-right">
-        <a href="../index.html" class="back-link">← Back to Casino</a>
+        <a href="../index.html" class="back-link">← Laboratory</a>
 
         <div class="wallet">
             <span class="wallet-symbol">₮</span>
@@ -1042,11 +1043,14 @@ a {
 "use strict";
 
 /* =========================================
-   SHARED ACCOUNT (synced with casino app.js)
+   STORAGE AND WALLET
 ========================================= */
 
-const ACCOUNT_KEY = "vaultplay-account-v1";
-const PLINKO_KEY  = "vaultplay_plinko_v1";
+const STORAGE = {
+    balance: "vaultplay_balance_v1",
+    history: "vaultplay_history_v1",
+    plinko: "vaultplay_plinko_v1"
+};
 
 function readJSON(key, fallback) {
     try {
@@ -1057,20 +1061,12 @@ function readJSON(key, fallback) {
     }
 }
 
-function readAccount() {
-    const data = readJSON(ACCOUNT_KEY, null) || {};
-    return {
-        balance:   Math.max(0, Number(data.balance) || 0),
-        favorites: Array.isArray(data.favorites) ? data.favorites : [],
-        history:   Array.isArray(data.history)   ? data.history   : []
-    };
+function readBalance() {
+    const value = Number(localStorage.getItem(STORAGE.balance));
+    return Number.isFinite(value) && value >= 0 ? value : 0;
 }
 
-function saveAccount(account) {
-    localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
-}
-
-let balance = readAccount().balance;
+let balance = readBalance();
 
 function money(value) {
     return Number(value).toLocaleString("en-US", {
@@ -1080,31 +1076,30 @@ function money(value) {
 }
 
 function updateWallet() {
-    balance = readAccount().balance;
-    const el = document.getElementById("walletBalance");
-    if (el) el.textContent = money(balance);
+    balance = readBalance();
+    document.getElementById("walletBalance").textContent = money(balance);
 }
 
 function saveBalance() {
-    const account = readAccount();
-    account.balance = Math.round(balance * 100) / 100;
-    saveAccount(account);
+    localStorage.setItem(STORAGE.balance, String(balance));
     updateWallet();
 }
 
 function addWalletHistory(description, amount, type) {
-    const account = readAccount();
+    const history = readJSON(STORAGE.history, []);
 
-    account.history.unshift({
+    history.unshift({
         id: Date.now() + Math.random(),
-        type,                 
         description,
         amount: Number(amount),
+        type,
         date: new Date().toISOString()
     });
 
-    account.history = account.history.slice(0, 100);
-    saveAccount(account);
+    localStorage.setItem(
+        STORAGE.history,
+        JSON.stringify(history.slice(0, 100))
+    );
 }
 
 /* =========================================
@@ -1180,7 +1175,7 @@ async function hmacSHA256(keyText, message) {
 }
 
 function loadFairState() {
-    let state = readJSON(PLINKO_KEY, null);
+    let state = readJSON(STORAGE.plinko, null);
 
     if (
         !state ||
@@ -1202,7 +1197,7 @@ function loadFairState() {
 }
 
 function saveFairState(state) {
-    localStorage.setItem(PLINKO_KEY, JSON.stringify(state));
+    localStorage.setItem(STORAGE.plinko, JSON.stringify(state));
 }
 
 let fair = loadFairState();
@@ -1432,8 +1427,8 @@ function animateBall(path) {
         for (let step = 0; step < path.length; step++) {
             position += path[step] === 1 ? 1 : -1;
 
-            const x = geo.center + position * geo.pegGap / 2
-                        const y = geo.topY + step * geo.rowGap + 12;
+            const x = geo.center + position * geo.pegGap / 2;
+            const y = geo.topY + step * geo.rowGap + 12;
 
             ball.setAttribute("cx", x);
             ball.setAttribute("cy", y);
@@ -1618,7 +1613,7 @@ async function playGame() {
     }
 
     if (bet > balance) {
-        toast("Insufficient balance. Add virtual USDT in the casino.");
+        toast("Insufficient balance. Add virtual USDT in Laboratory.");
         return;
     }
 
