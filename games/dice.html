@@ -10,15 +10,16 @@
   .app-container { max-width: 480px; width: 100%; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; position: relative; }
   .content-area { padding: 14px; flex: 1; padding-bottom: 90px; }
 
-  /* Top History Bar - Left to Right */
-  .history-bar { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+  /* History Bar - Populates from Right to Left */
+  .history-bar { display: flex; gap: 8px; margin-bottom: 20px; justify-content: flex-end; overflow: hidden; }
   .history-pill {
     background: var(--panel); color: var(--text); font-weight: 700; font-size: 0.85rem;
     padding: 8px 16px; border-radius: 20px; min-width: 60px; text-align: center;
     display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
   }
   .history-pill.win { background: #00e701; color: #000; }
-  .history-pill.loss { background: var(--panel); color: var(--muted); }
+  .history-pill.loss { background: var(--panel2); color: var(--muted); }
 
   /* Game Panel */
   .game-panel {
@@ -26,43 +27,46 @@
     margin-bottom: 16px; display: flex; flex-direction: column; gap: 30px;
   }
 
-  /* --- Custom Slider --- */
+  /* --- Custom Slider (Thinner) --- */
   .slider-wrapper { position: relative; padding: 20px 10px 0 10px; }
   .slider-labels { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 12px; pointer-events: none;}
   
   .slider-track-container {
-    height: 32px; background: var(--panel2); border-radius: 16px;
+    height: 20px; /* Thinner track */
+    background: var(--panel2); border-radius: 10px;
     position: relative; display: flex; align-items: center;
     padding: 0 4px; box-sizing: border-box; cursor: pointer;
     touch-action: none;
   }
+  
+  /* The red and green fill zones */
   .slider-fill {
-    position: absolute; top: 8px; bottom: 8px; left: 4px; right: 4px;
-    border-radius: 8px; display: flex; overflow: hidden; pointer-events: none;
+    position: absolute; top: 2px; bottom: 2px; border-radius: 8px;
+    display: flex; overflow: hidden; pointer-events: none;
+    left: 4px; right: 4px;
   }
   .fill-red { background: #ff3b3b; height: 100%; position: absolute; left: 0; }
   .fill-green { background: #00e701; height: 100%; position: absolute; right: 0; }
   
   /* The draggable handle */
   .slider-handle {
-    position: absolute; width: 46px; height: 38px; background: #2d9cdb;
+    position: absolute; width: 46px; height: 34px; background: #2d9cdb;
     border-radius: 6px; border: 2px solid #1e6b9e;
     display: flex; align-items: center; justify-content: center;
-    top: -3px; transform: translateX(-50%);
+    top: -5px; transform: translateX(-50%);
     z-index: 5; box-shadow: 0 4px 10px rgba(0,0,0,0.5); cursor: grab;
     touch-action: none;
   }
-  .slider-handle::before { content: "❘❘❘"; color: #1e6b9e; font-size: 1.2rem; letter-spacing: -2px; pointer-events: none;}
+  .slider-handle::before { content: "❘❘❘"; color: #1e6b9e; font-size: 1.1rem; letter-spacing: -2px; pointer-events: none;}
   
-  /* Floating Result Cube - Shows over the slider */
+  /* Floating Result Cube */
   .result-cube {
-    position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
-    width: 56px; height: 56px; background: white;
+    position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+    width: 50px; height: 50px; background: white;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 1.1rem; color: #ff3b3b;
+    font-weight: 900; font-size: 1rem; color: #ff3b3b;
     opacity: 0; pointer-events: none; z-index: 10;
-    /* Removed transitions so it snaps instantly */
   }
   .result-cube::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -137,14 +141,8 @@
 
   <main class="content-area">
     
-    <!-- History Bar (Left to Right) -->
-    <div class="history-bar" id="historyBar">
-      <div class="history-pill loss">-</div>
-      <div class="history-pill loss">-</div>
-      <div class="history-pill loss">-</div>
-      <div class="history-pill loss">-</div>
-      <div class="history-pill loss">-</div>
-    </div>
+    <!-- History Bar -->
+    <div class="history-bar" id="historyBar"></div>
 
     <div class="game-panel">
       <div class="slider-wrapper">
@@ -158,7 +156,6 @@
             <div id="fillGreen" class="fill-green" style="width: 49.5%;"></div>
           </div>
           <div id="sliderHandle" class="slider-handle" style="left: 50.5%;">
-            <!-- Result Cube sits here -->
             <div id="resultCube" class="result-cube">50.00</div>
           </div>
         </div>
@@ -261,14 +258,11 @@
 
 <script src="../app.js"></script>
 <script>
-  let isUnder = false; // Default Roll Over
+  let isUnder = false; 
   let isRolling = false;
   let currentMultiplier = 1.9800;
-  
-  // History array starts empty
   let rollHistory = [];
 
-  // Limits
   const MIN_ROLL = 0.01;
   const MAX_ROLL = 99.99;
 
@@ -316,16 +310,27 @@
     
     currentMultiplier = multiplier;
 
-    // Update Colors
+    // Instantly sync the red/green bars
     const fillRed = document.getElementById('fillRed');
     const fillGreen = document.getElementById('fillGreen');
     
+    // We swap the widths and the left/right anchoring to ensure it snaps cleanly
     if (isUnder) {
       fillGreen.style.width = rollOver + '%';
+      fillGreen.style.left = '0%';
+      fillGreen.style.right = 'auto';
+      
       fillRed.style.width = (100 - rollOver) + '%';
+      fillRed.style.left = rollOver + '%';
+      fillRed.style.right = 'auto';
     } else {
       fillRed.style.width = rollOver + '%';
+      fillRed.style.left = '0%';
+      fillRed.style.right = 'auto';
+      
       fillGreen.style.width = (100 - rollOver) + '%';
+      fillGreen.style.left = rollOver + '%';
+      fillGreen.style.right = 'auto';
     }
 
     updateProfit();
@@ -361,9 +366,9 @@
     const bar = document.getElementById('historyBar');
     const targetVal = parseFloat(document.getElementById('rollOverInput').value);
     
-    // Fill missing slots with "-"
     let html = '';
-    for(let i = 0; i < 5; i++) {
+    // Reversing the loop to render from right to left visually
+    for(let i = 4; i >= 0; i--) {
       if (i < rollHistory.length) {
         const roll = rollHistory[i];
         const isWin = isUnder ? (roll < targetVal) : (roll > targetVal);
@@ -417,17 +422,14 @@
     document.getElementById('betBtn').textContent = "Rolling...";
     
     const cube = document.getElementById('resultCube');
-    cube.style.opacity = '0'; // Hide old result
+    cube.style.opacity = '0'; 
 
     const targetVal = parseFloat(document.getElementById('rollOverInput').value);
     const finalRoll = Math.random() * 100; 
 
-    // Stake Animation: The cube slides across the screen, NOT the slider.
-    // It starts at the slider's position and moves to the result.
-    const startX = parseFloat(document.getElementById('rollOverInput').value);
-    
-    // We animate the cube's position from startX to finalRoll
-    const duration = 600; // ms
+    // Start animation FROM the current handle position
+    const startX = targetVal; 
+    const duration = 600; 
     const startTime = performance.now();
 
     function animate(time) {
@@ -438,10 +440,9 @@
       // Ease out cubic
       const easeOut = 1 - Math.pow(1 - progress, 3);
       
-      // Calculate cube position
+      // Calculate cube position sliding from handle to result
       const currentX = startX + (finalRoll - startX) * easeOut;
       
-      // Move the cube across the screen
       cube.style.left = currentX + '%';
       cube.style.opacity = '1';
 
@@ -461,31 +462,19 @@
     if (isUnder) win = roll < targetVal;
     else win = roll > targetVal;
 
-    // Keep cube visible
+    // Cube snaps to the final roll position
     const cube = document.getElementById('resultCube');
     cube.textContent = roll.toFixed(2);
     cube.style.color = win ? '#00e701' : '#ff3b3b';
+    cube.style.left = roll + '%'; 
     cube.style.opacity = '1';
-    cube.style.left = roll + '%'; // Snap to exact result
 
-    // Add to history (Unshift adds to the beginning of the array)
+    // Add to history (unshift puts the newest one at index 0)
     rollHistory.unshift(roll);
-    if (rollHistory.length > 5) rollHistory.pop(); // Keep max 5 items
+    if (rollHistory.length > 5) rollHistory.pop(); 
     
-    // Re-render history without changing slider position
-    const bar = document.getElementById('historyBar');
-    let html = '';
-    for(let i = 0; i < 5; i++) {
-      if (i < rollHistory.length) {
-        const hRoll = rollHistory[i];
-        const isWin = isUnder ? (hRoll < targetVal) : (hRoll > targetVal);
-        const colorClass = isWin ? 'win' : 'loss';
-        html += `<div class="history-pill ${colorClass}">${hRoll.toFixed(2)}</div>`;
-      } else {
-        html += `<div class="history-pill loss">-</div>`;
-      }
-    }
-    bar.innerHTML = html;
+    // Render history (newest is at index 0, so our reversed loop puts it on the right)
+    renderHistory();
 
     // Payout
     const payout = win ? (betAmt * currentMultiplier) : 0;
