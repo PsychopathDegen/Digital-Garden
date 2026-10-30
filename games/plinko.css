@@ -1,0 +1,278 @@
+
+.plinko-shell {
+  color: #f5f6f8;
+  background: #111419;
+  padding: 22px;
+  border-radius: 12px;
+  font-family: Arial, sans-serif;
+}
+
+.plinko-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.plinko-heading h2 {
+  font-size: 28px;
+  margin: 5px 0;
+}
+
+.plinko-heading p,
+.plinko-shell p {
+  color: #9ba3af;
+}
+
+.plinko-eyebrow {
+  color: #28dca0;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.plinko-fair-status {
+  background: #173d33;
+  color: #28dca0;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.plinko-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 20px;
+}
+
+.plinko-board-panel,
+.plinko-controls,
+.plinko-fair-panel,
+.plinko-history-panel {
+  background: #191e25;
+  border: 1px solid #292f38;
+  border-radius: 9px;
+  padding: 16px;
+}
+
+.plinko-board-wrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.plinko-canvas {
+  width: 100%;
+  display: block;
+}
+
+.plinko-buckets {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  flex-wrap: nowrap;
+}
+
+.plinko-bucket {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  background: #343b46;
+  color: white;
+  padding: 9px 1px;
+  border-radius: 4px;
+  font-size: clamp(9px, 1.2vw, 13px);
+  font-weight: bold;
+}
+
+.plinko-bucket.big {
+  background: #7b3d25;
+  color: #ffd5a5;
+}
+
+.plinko-result {
+  min-height: 72px;
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #28dca0;
+}
+
+.plinko-result strong {
+  font-size: 27px;
+}
+
+.plinko-result span {
+  font-weight: bold;
+}
+
+.plinko-result small {
+  width: 100%;
+  text-align: center;
+  color: #929ba8;
+}
+
+.plinko-controls label {
+  display: block;
+  margin: 13px 0 7px;
+  color: #aab2bf;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.plinko-bet-row,
+.plinko-seed-row {
+  display: flex;
+  gap: 7px;
+}
+
+.plinko-bet-row input,
+.plinko-seed-row input,
+.plinko-fair-panel input,
+.plinko-verify-seed,
+.plinko-verify-client,
+.plinko-verify-nonce,
+.plinko-verify-rows {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: #101419;
+  border: 1px solid #353d48;
+  color: white;
+  padding: 11px;
+  border-radius: 5px;
+}
+
+.plinko-bet-row span {
+  align-self: center;
+  font-size: 11px;
+  color: #aab2bf;
+}
+
+.plinko-quick-bets,
+.plinko-risk,
+.plinko-rows {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.plinko-shell button {
+  cursor: pointer;
+  background: #303844;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.plinko-shell button:hover {
+  filter: brightness(1.2);
+}
+
+.plinko-shell button.selected {
+  background: #176f55;
+  color: white;
+}
+
+.plinko-quick-bets button,
+.plinko-risk button,
+.plinko-rows button {
+  flex: 1;
+}
+
+.plinko-drop {
+  width: 100%;
+  margin-top: 22px;
+  background: #28dca0 !important;
+  color: #071a13 !important;
+  padding: 15px !important;
+  font-size: 14px;
+}
+
+.plinko-drop:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+.plinko-balance {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid #303844;
+  font-size: 12px;
+  color: #aab2bf;
+}
+
+.plinko-balance strong {
+  color: #28dca0;
+}
+
+.plinko-fair-panel,
+.plinko-history-panel {
+  margin-top: 20px;
+}
+
+.plinko-fair-panel h3,
+.plinko-history-panel h3 {
+  margin-top: 5px;
+}
+
+.plinko-fair-panel code {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #28dca0;
+  background: #101419;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 11px;
+}
+
+.plinko-fair-panel button {
+  margin-top: 8px;
+}
+
+.plinko-fair-panel input {
+  margin-bottom: 8px;
+}
+
+.plinko-verify {
+  width: 100%;
+}
+
+.plinko-history-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 50px 70px;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 4px;
+  border-bottom: 1px solid #303844;
+  font-size: 12px;
+}
+
+.positive {
+  color: #28dca0 !important;
+}
+
+.negative {
+  color: #ff626f !important;
+}
+
+@media (max-width: 760px) {
+  .plinko-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .plinko-shell {
+    padding: 12px;
+  }
+
+  .plinko-history-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
