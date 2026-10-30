@@ -1,257 +1,372 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>PlayStake — Play Money Casino</title>
-<link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f1923">
+    <title>VaultPlay | Casino</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
 </head>
 <body>
 
-<!-- Slide-out Menu Drawer -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
-<aside class="drawer" id="drawer">
-  <div class="drawer-head">
-    <button class="icon-btn" onclick="toggleMenu()">✕</button>
-    <div class="brand" style="font-size: 1.5rem; margin-left: 10px;">Play<span>Stake</span></div>
-  </div>
-  
-  <div class="drawer-tabs">
-    <button class="drawer-tab active">Casino</button>
-    <button class="drawer-tab">Sports</button>
-  </div>
+<div class="app">
 
-  <div class="drawer-links">
-    <a href="#">🎁 Promotions <span>⌄</span></a>
-    <a href="#">🏔️ Challenges</a>
-    <a href="#">🤝 Affiliate</a>
-    <a href="#">👑 VIP Club</a>
-    <a href="#">📝 Blog</a>
-    <a href="#">💬 Forum</a>
-    <div class="divider"></div>
-    <a href="#">🤝 Sponsorships <span>⌄</span></a>
-    <a href="#">🛡️ Responsible Gambling</a>
-    <a href="#">🎧 Live Support</a>
-    <a href="#">🌐 Language: English <span>⌄</span></a>
-  </div>
-</aside>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
 
-<!-- Main Mobile Layout -->
-<div class="app-container">
+        <a href="#" class="logo">
+            <span class="logo-icon">V</span>
+            VAULT<span>PLAY</span>
+        </a>
 
-  <!-- Top Header -->
-  <header class="topbar">
-    <div class="brand" onclick="location.href='index.html'">S</div>
-    
-    <div class="balance-pill" onclick="openDeposit()">
-      <span id="balanceDisplay">0.00000000</span>
-      <span class="coin">₮</span>
-      <span class="dropdown-arrow">⌄</span>
-    </div>
+        <div class="nav-section">
+            <div class="nav-label">GAMES</div>
 
-    <div class="top-actions">
-      <button class="icon-btn wallet-blue" onclick="openWallet()">💼</button>
-      <button class="icon-btn">👤</button>
-      <button class="icon-btn">🔔</button>
-    </div>
-  </header>
+            <button class="nav-item active" data-view="casino">
+                <span class="nav-icon">▦</span>
+                Casino
+            </button>
 
-  <!-- Scrollable Content -->
-  <main class="content-area">
+            <button class="nav-item" data-view="originals">
+                <span class="nav-icon">◇</span>
+                Originals
+            </button>
 
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <span>🔍</span>
-      <input type="text" placeholder="Search PlayStake.com" />
-      <button class="icon-btn" onclick="toggleMenu()">✕</button>
-    </div>
-
-    <!-- VIP Progress Section (Updated to Stake Logic) -->
-    <div class="vip-section">
-      <div class="section-header">
-        <h2>🏆 VIP Progress <span>›</span></h2>
-      </div>
-      
-      <div class="vip-bar-container">
-        <div class="vip-badge" id="vipBadge">⭐</div>
-        <div class="vip-info">
-          <div class="vip-name-row">
-            <span id="vipName">Non-VIP</span>
-            <span id="vipPercentage">0.00%</span>
-          </div>
-          
-          <!-- The Progress Bar -->
-          <div class="vip-progress-track">
-            <div class="vip-progress-fill" id="vipProgressFill" style="width: 0%;"></div>
-          </div>
-          
-          <!-- Level Labels -->
-          <div class="vip-levels">
-            <span id="vipCurrentLevel">Non-VIP</span>
-            <span id="vipNextLevel">Bronze</span>
-          </div>
-          
-          <!-- Wager Amount Info -->
-          <div class="vip-wager-info">
-            <span id="vipWageredText">$0.00 Wagered</span>
-            <span id="vipNextThresholdText">$10,000 to next level</span>
-          </div>
+            <button class="nav-item" data-view="favorites">
+                <span class="nav-icon">♡</span>
+                Favorites
+            </button>
         </div>
-      </div>
-    </div>
 
-    <!-- Section: Originals -->
-    <div class="section-header">
-      <h2>🔥 PlayStake Originals <span>›</span></h2>
-    </div>
+        <div class="nav-section">
+            <div class="nav-label">ACCOUNT</div>
 
-    <div class="games-grid">
-      <!-- Game 1 -->
-      <div class="game-card" onclick="location.href='games/dice.html'">
-        <div class="gc-img bg-dice"><div class="gc-content">🎲</div></div>
-        <h3>DICE</h3>
-        <p>PLAYSTAKE ORIGINALS</p>
-        <div class="gc-players">🟢 2,012 playing</div>
-      </div>
-      
-      <!-- Game 2 -->
-      <div class="game-card" onclick="location.href='games/mines.html'">
-        <div class="gc-img bg-mines"><div class="gc-content">💎</div></div>
-        <h3>MINES</h3>
-        <p>PLAYSTAKE ORIGINALS</p>
-        <div class="gc-players">🟢 2,207 playing</div>
-      </div>
+            <button class="nav-item" id="sidebarDeposit">
+                <span class="nav-icon">＋</span>
+                Deposit
+            </button>
 
-      <!-- Game 3 -->
-      <div class="game-card" onclick="location.href='games/plinko.html'">
-        <div class="gc-img bg-plinko"><div class="gc-content">🟠</div></div>
-        <h3>PLINKO</h3>
-        <p>PLAYSTAKE ORIGINALS</p>
-        <div class="gc-players">🟢 1,012 playing</div>
-      </div>
+            <button class="nav-item" data-view="history">
+                <span class="nav-icon">◷</span>
+                Bet History
+            </button>
+        </div>
 
-      <!-- Game 4 -->
-      <div class="game-card" onclick="location.href='games/blackjack.html'">
-        <div class="gc-img bg-blackjack"><div class="gc-content">♠️</div></div>
-        <h3>BLACKJACK</h3>
-        <p>PLAYSTAKE ORIGINALS</p>
-        <div class="gc-players">🟢 1,019 playing</div>
-      </div>
+        <div class="sidebar-bottom">
+            <div class="demo-status">
+                <span class="online-dot"></span>
+                Virtual casino
+            </div>
 
-      <!-- Game 5 -->
-      <div class="game-card" onclick="location.href='games/limbo.html'">
-        <div class="gc-img bg-limbo"><div class="gc-content">900x</div></div>
-        <h3>LIMBO</h3>
-        <p>PLAYSTAKE ORIGINALS</p>
-        <div class="gc-players">🟢 1,490 playing</div>
-      </div>
+            <p>VaultPlay is a private entertainment simulator. No real money is involved.</p>
+        </div>
 
-      <!-- Game 6 -->
-      <div class="game-card" onclick="location.href='games/keno.html'">
-        <div class="gc-img bg-keno"><div class="gc-content">8</div></div>
-        <h3>KENO</h3>
-        <p>PLAYSTAKE ORIGINALS</p>
-        <div class="gc-players">🟢 1,248 playing</div>
-      </div>
-    </div>
-    
-    <div class="load-more">Load More</div>
+    </aside>
 
-  </main>
 
-  <!-- Bottom Navigation Bar -->
-  <nav class="bottom-nav">
-    <a href="#" class="nav-item">
-      <span class="nav-icon">📊</span>
-      <span>Browse</span>
-    </a>
-    <a href="#" class="nav-item active">
-      <span class="nav-icon">🎰</span>
-      <span>Casino</span>
-    </a>
-    <a href="#" class="nav-item">
-      <span class="nav-icon">✨</span>
-      <span>For You</span>
-    </a>
-    <a href="#" class="nav-item">
-      <span class="nav-icon">⚽</span>
-      <span>Sports</span>
-    </a>
-    <a href="#" class="nav-item">
-      <span class="nav-icon">💬</span>
-      <span>Chat</span>
-    </a>
-  </nav>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP NAVIGATION -->
+        <header class="topbar">
+
+            <button class="mobile-menu" id="mobileMenu">☰</button>
+
+            <div class="topbar-spacer"></div>
+
+            <div class="wallet">
+
+                <div class="wallet-info">
+                    <span class="wallet-label">YOUR BALANCE</span>
+
+                    <div class="wallet-amount">
+                        <span id="balance">0.00</span>
+                        <span class="currency">USDT</span>
+                    </div>
+                </div>
+
+                <button class="deposit-btn" id="depositButton">
+                    ＋ Deposit
+                </button>
+
+            </div>
+
+            <button class="profile-btn">A</button>
+
+        </header>
+
+
+        <!-- WELCOME BANNER -->
+        <section class="welcome-banner">
+
+            <div class="welcome-content">
+
+                <span class="welcome-label">WELCOME TO VAULTPLAY</span>
+
+                <h1>Ready to play?</h1>
+
+                <p>
+                    Your games. Your playground.
+                    Experience the casino without real money.
+                </p>
+
+            </div>
+
+            <div class="welcome-badge">
+                <span class="online-dot"></span>
+                DEMO MODE
+            </div>
+
+        </section>
+
+
+        <!-- GAME LOBBY -->
+        <section class="lobby">
+
+            <div class="lobby-header">
+
+                <div>
+                    <span class="section-label">EXPLORE</span>
+                    <h2 id="pageTitle">Casino</h2>
+                </div>
+
+                <div class="search-container">
+                    <span>⌕</span>
+
+                    <input
+                        type="search"
+                        id="gameSearch"
+                        placeholder="Search games..."
+                    >
+                </div>
+
+            </div>
+
+
+            <!-- CATEGORIES -->
+            <div class="categories">
+
+                <button class="category active" data-category="all">
+                    All Games
+                </button>
+
+                <button class="category" data-category="originals">
+                    Originals
+                </button>
+
+                <button class="category" data-category="table">
+                    Table Games
+                </button>
+
+                <button class="category" data-category="favorites">
+                    Favorites
+                </button>
+
+            </div>
+
+
+            <!-- GAME GRID -->
+            <div class="game-grid" id="gameGrid">
+
+                <article class="game-card" data-name="Plinko" data-category="originals">
+
+                    <div class="game-art plinko-art">
+                        <span class="game-tag">ORIGINAL</span>
+                        <span class="game-symbol">✣</span>
+                    </div>
+
+                    <div class="game-details">
+                        <div>
+                            <h3>Plinko</h3>
+                            <p>Drop and multiply</p>
+                        </div>
+
+                        <button class="favorite-btn" aria-label="Favorite Plinko">♡</button>
+                    </div>
+
+                </article>
+
+
+                <article class="game-card" data-name="Limbo" data-category="originals">
+
+                    <div class="game-art limbo-art">
+                        <span class="game-tag">ORIGINAL</span>
+                        <span class="game-symbol">↗</span>
+                    </div>
+
+                    <div class="game-details">
+                        <div>
+                            <h3>Limbo</h3>
+                            <p>Choose your multiplier</p>
+                        </div>
+
+                        <button class="favorite-btn" aria-label="Favorite Limbo">♡</button>
+                    </div>
+
+                </article>
+
+
+                <article class="game-card" data-name="Mines" data-category="originals">
+
+                    <div class="game-art mines-art">
+                        <span class="game-tag">ORIGINAL</span>
+                        <span class="game-symbol">▦</span>
+                    </div>
+
+                    <div class="game-details">
+                        <div>
+                            <h3>Mines</h3>
+                            <p>Find the safe tiles</p>
+                        </div>
+
+                        <button class="favorite-btn" aria-label="Favorite Mines">♡</button>
+                    </div>
+
+                </article>
+
+
+                <article class="game-card" data-name="Dice" data-category="originals">
+
+                    <div class="game-art dice-art">
+                        <span class="game-tag">ORIGINAL</span>
+                        <span class="game-symbol">⚄</span>
+                    </div>
+
+                    <div class="game-details">
+                        <div>
+                            <h3>Dice</h3>
+                            <p>Set your target</p>
+                        </div>
+
+                        <button class="favorite-btn" aria-label="Favorite Dice">♡</button>
+                    </div>
+
+                </article>
+
+
+                <article class="game-card" data-name="Crash" data-category="originals">
+
+                    <div class="game-art crash-art">
+                        <span class="game-tag">ORIGINAL</span>
+                        <span class="game-symbol">⌁</span>
+                    </div>
+
+                    <div class="game-details">
+                        <div>
+                            <h3>Crash</h3>
+                            <p>Cash out in time</p>
+                        </div>
+
+                        <button class="favorite-btn" aria-label="Favorite Crash">♡</button>
+                    </div>
+
+                </article>
+
+
+                <article class="game-card" data-name="Keno" data-category="table">
+
+                    <div class="game-art keno-art">
+                        <span class="game-tag">TABLE</span>
+                        <span class="game-symbol">⠿</span>
+                    </div>
+
+                    <div class="game-details">
+                        <div>
+                            <h3>Keno</h3>
+                            <p>Pick your numbers</p>
+                        </div>
+
+                        <button class="favorite-btn" aria-label="Favorite Keno">♡</button>
+                    </div>
+
+                </article>
+
+            </div>
+
+            <div class="empty-state hidden" id="emptyState">
+                No games found.
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+            <span>VAULTPLAY</span>
+            <span>Virtual USDT · Entertainment only</span>
+        </footer>
+
+    </main>
+
 </div>
 
-<!-- Deposit Modal -->
-<div class="modal-overlay" id="depositModal">
-  <div class="modal">
-    <div class="modal-head">
-      <h2>Deposit USDT</h2>
-      <button class="close" onclick="closeDeposit()">✕</button>
+
+<!-- DEPOSIT MODAL -->
+<div class="modal-overlay hidden" id="depositModal">
+
+    <div class="deposit-modal">
+
+        <button class="close-modal" id="closeModal">×</button>
+
+        <span class="section-label">VIRTUAL WALLET</span>
+
+        <h2>Deposit</h2>
+
+        <p class="modal-description">
+            Add virtual USDT to your balance.
+            No real cryptocurrency or payments are involved.
+        </p>
+
+        <label for="depositAmount">
+            Amount
+            <span>USDT</span>
+        </label>
+
+        <div class="amount-input">
+
+            <span>₮</span>
+
+            <input
+                type="number"
+                id="depositAmount"
+                placeholder="0.00"
+                min="0.01"
+                step="0.01"
+            >
+
+        </div>
+
+
+        <div class="quick-amounts">
+
+            <button data-amount="10">10</button>
+            <button data-amount="50">50</button>
+            <button data-amount="100">100</button>
+            <button data-amount="500">500</button>
+
+        </div>
+
+
+        <p class="error-message hidden" id="depositError">
+            Please enter a valid amount.
+        </p>
+
+        <button class="confirm-deposit" id="confirmDeposit">
+            Confirm Deposit
+        </button>
+
+        <p class="modal-note">
+            Virtual credits only. Your balance is saved locally.
+        </p>
+
     </div>
-    <div class="modal-body">
-      <label class="lbl">Network</label>
-      <select id="networkSelect" class="input">
-        <option>TRC20 (Tron)</option>
-        <option>ERC20 (Ethereum)</option>
-        <option>BEP20 (BSC)</option>
-        <option>Polygon</option>
-      </select>
-      <label class="lbl">Deposit address</label>
-      <div class="addr-row">
-        <code id="fakeAddress">TXk9...fake...9Qz</code>
-        <button class="btn ghost small" onclick="copyAddress()">Copy</button>
-      </div>
-      <div class="qr-wrap">
-        <canvas id="qrCanvas" width="140" height="140"></canvas>
-        <p class="muted tiny">Scan (fake) — this is a placeholder QR</p>
-      </div>
-      <label class="lbl">Amount to credit (USDT)</label>
-      <input type="number" id="depositAmount" class="input" placeholder="e.g. 1000" min="0.01" step="0.01" />
-      <button class="btn wide" onclick="confirmDeposit()">I've paid — Confirm deposit</button>
-    </div>
-  </div>
+
 </div>
 
-<!-- Wallet Modal -->
-<div class="modal-overlay" id="walletModal">
-  <div class="modal wide-modal">
-    <div class="modal-head">
-      <h2>Wallet & Stats</h2>
-      <button class="close" onclick="closeWallet()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="stats-grid">
-        <div class="stat"><span id="statBets">0</span><small>Total bets</small></div>
-        <div class="stat"><span id="statWagered">0.00</span><small>Wagered</small></div>
-        <div class="stat"><span id="statProfit">0.00</span><small>Net profit</small></div>
-      </div>
-      <h3 class="hist-title">Bet history</h3>
-      <div class="history-list" id="historyList"></div>
-      <div class="wallet-actions">
-        <button class="btn ghost small" onclick="resetBalance()">Reset balance to 0</button>
-        <button class="btn ghost small" onclick="clearHistory()">Clear history</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<script src="app.js"></script>
-<script>
-  // Drawer toggle logic
-  function toggleMenu() {
-    const drawer = document.getElementById('drawer');
-    const overlay = document.getElementById('drawerOverlay');
-    if (drawer.classList.contains('open')) {
-      drawer.classList.remove('open');
-      overlay.classList.remove('open');
-    } else {
-      drawer.classList.add('open');
-      overlay.classList.add('open');
-    }
-  }
-</script>
+<!-- NOTIFICATION -->
+<div class="toast hidden" id="toast"></div>
+
 </body>
 </html>
