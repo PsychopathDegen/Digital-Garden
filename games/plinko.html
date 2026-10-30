@@ -9,686 +9,142 @@
 
 <style>
 :root {
-    --bg: #101511;
-    --panel: #171e19;
-    --panel2: #1d261f;
-    --border: #2b382e;
-    --green: #00e701;
-    --text: #f2f7f2;
-    --muted: #89968d;
-    --red: #f15b65;
+    --bg:#101511;
+    --panel:#171e19;
+    --border:#2b382e;
+    --green:#00e701;
+    --text:#f2f7f2;
+    --muted:#89968d;
+    --red:#f15b65;
 }
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    font-family: Inter, Arial, sans-serif;
-}
-
-button, input { font: inherit; }
-button { cursor: pointer; }
-button:disabled { cursor: not-allowed; opacity: .45; }
-a { text-decoration: none; color: inherit; }
-
-/* TOP BAR */
+* {box-sizing:border-box;margin:0;padding:0}
+body {min-height:100vh;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+button,input {font:inherit}
+button {cursor:pointer}
+button:disabled {cursor:not-allowed;opacity:.45}
+a {text-decoration:none;color:inherit}
 
 .topbar {
-    min-height: 70px;
-    background: #141a15;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 15px;
-    font-weight: 900;
-    letter-spacing: 1px;
-}
-
-.brand-mark {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: grid;
-    place-items: center;
-    background: var(--green);
-    color: #071007;
-    font-size: 21px;
-}
-
-.brand-light { color: var(--green); }
-
-.topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.back-link {
-    color: #a4b0a7;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 10px;
-}
-
-.back-link:hover { color: var(--green); }
-
-.wallet {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: #101611;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 13px;
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.wallet-currency {
-    color: var(--muted);
-    font-size: 10px;
-}
-
-/* PAGE */
-
-.page {
-    width: 100%;
-    max-width: 1700px;
-    margin: auto;
-    padding: 25px 28px;
-}
-
-.breadcrumb {
-    color: var(--muted);
-    font-size: 11px;
-    margin-bottom: 20px;
-}
-
-.breadcrumb span {
-    color: var(--green);
-    padding: 0 7px;
-}
-
-.game-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 23px;
-}
-
-.game-heading h1 {
-    font-size: 27px;
-    font-weight: 900;
-    letter-spacing: -.5px;
-}
-
-.game-heading p {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.fair-status {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: #a5b3a8;
-    font-size: 10px;
-    background: #172219;
-    border: 1px solid #2a4730;
-    border-radius: 20px;
-    padding: 8px 12px;
-}
-
-.fair-dot {
-    height: 7px;
-    width: 7px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-}
-
-/* GAME LAYOUT */
-
-.game-layout {
-    display: grid;
-    grid-template-columns: 285px minmax(0, 1fr);
-    gap: 16px;
-    align-items: stretch;
-}
-
-/* CONTROLS */
-
-.controls {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 20px;
-}
-
-.control-group { margin-bottom: 21px; }
-
-.control-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #a7b3aa;
-    font-size: 11px;
-    font-weight: 800;
-    margin-bottom: 9px;
-}
-
-.control-label small {
-    color: var(--muted);
-    font-weight: 500;
-}
-
-.bet-input-wrap {
-    height: 43px;
-    display: flex;
-    align-items: center;
-    border: 1px solid #354339;
-    background: #101611;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.bet-input-wrap:focus-within { border-color: var(--green); }
-
-.bet-input-wrap input {
-    width: 100%;
-    min-width: 0;
-    height: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: white;
-    padding: 0 12px;
-    font-size: 13px;
-    font-weight: 800;
-}
-
-.bet-input-wrap input::-webkit-inner-spin-button,
-.bet-input-wrap input::-webkit-outer-spin-button {
-    appearance: none;
-}
-
-.input-currency {
-    padding: 0 12px;
-    color: var(--green);
-    font-size: 10px;
-    font-weight: 900;
-}
-
-.bet-shortcuts {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    margin-top: 7px;
-}
-
-.bet-shortcuts button {
-    height: 29px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: #202921;
-    color: #aeb9b1;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.bet-shortcuts button:hover {
-    background: #2c3a2f;
-    color: white;
-}
-
-/* RISK */
-
-.risk-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-}
-
-.risk-button {
-    height: 36px;
-    background: #202921;
-    border: 1px solid var(--border);
-    color: #aab5ac;
-    border-radius: 5px;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.risk-button.active {
-    background: #1d3823;
-    border-color: var(--green);
-    color: var(--green);
-}
-
-.rows-control {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #101611;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px;
-}
-
-.rows-control button {
-    width: 32px;
-    height: 29px;
-    border: 0;
-    border-radius: 4px;
-    color: white;
-    background: #263229;
-    font-weight: 900;
-}
-
-.rows-control button:hover { color: var(--green); }
-
-.rows-value {
-    font-size: 13px;
-    font-weight: 900;
-}
-
-.play-button {
-    width: 100%;
-    height: 47px;
-    background: var(--green);
-    color: #061006;
-    border: 0;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 1000;
-    margin-top: 3px;
-    transition: .18s;
-}
-
-.play-button:hover:not(:disabled) {
-    background: #28ff29;
-    transform: translateY(-1px);
-}
-
-.play-button:disabled {
-    background: #47794a;
-    color: #d7e5d8;
-}
-
-.control-note {
-    color: #728077;
-    font-size: 10px;
-    line-height: 1.6;
-    margin-top: 13px;
-}
-
-/* BOARD */
-
-.board-panel {
-    min-width: 0;
-    width: 100%;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-}
-
-.board-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 8px;
-}
-
-.board-top h2 {
-    font-size: 13px;
-    font-weight: 900;
-}
-
-.board-top span {
-    color: var(--muted);
-    font-size: 10px;
-}
-
-.board-wrapper {
-    width: 100%;
-    min-width: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-#plinkoBoard {
-    display: block;
-    width: 100%;
-    max-width: none;
-    height: auto;
-    overflow: visible;
-}
-
-.peg {
-    fill: #a8b7ab;
-    opacity: .8;
-}
-
-.ball {
-    fill: var(--green);
-    stroke: #b8ffba;
-    stroke-width: 1.5;
-    filter: drop-shadow(0 0 7px #00e701);
-}
-
-.bin {
-    stroke: #0d130f;
-    stroke-width: 2;
-}
-
-.bin-label {
-    fill: #071007;
-    font-size: 10px;
-    font-weight: 900;
-    text-anchor: middle;
-}
-
-.board-status {
-    text-align: center;
-    min-height: 26px;
-    color: var(--muted);
-    font-size: 11px;
-    padding-top: 7px;
-}
-
-.board-status strong { color: var(--green); }
-
-/* LOWER SECTIONS */
-
-.lower-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 17px;
-}
-
-.lower-panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 19px;
-    min-width: 0;
-}
-
-.lower-panel h3 {
-    font-size: 13px;
-    font-weight: 900;
-    margin-bottom: 14px;
-}
-
-.recent-results {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-}
-
-.recent-chip {
-    min-width: 53px;
-    text-align: center;
-    padding: 9px 8px;
-    border-radius: 5px;
-    background: #202a22;
-    color: #b8c5ba;
-    font-size: 10px;
-    font-weight: 900;
-}
-
-.recent-chip.win {
-    background: #183820;
-    color: var(--green);
-}
-
-.recent-chip.loss {
-    background: #382024;
-    color: #ff8b91;
-}
-
-.recent-empty {
-    color: var(--muted);
-    font-size: 11px;
-}
-
-/* FAIRNESS */
-
-.fairness {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 20px;
-    margin-top: 17px;
-}
-
-.fairness-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 16px;
-}
-
-.fairness-heading h3 { font-size: 13px; }
-
-.fairness-heading span {
-    color: var(--green);
-    font-size: 10px;
-}
-
-.seed-field { margin-bottom: 13px; }
-
-.seed-field label {
-    display: block;
-    color: #a7b3aa;
-    font-size: 10px;
-    font-weight: 800;
-    margin-bottom: 7px;
-}
-
-.seed-input {
-    width: 100%;
-    min-width: 0;
-    height: 39px;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    background: #101611;
-    color: #c5d1c8;
-    outline: 0;
-    padding: 0 10px;
-    font-size: 10px;
-}
-
-.seed-input:focus { border-color: var(--green); }
-
-.seed-readonly {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.seed-readonly input { flex: 1; }
-
-.seed-readonly button,
-.seed-action {
-    flex-shrink: 0;
-    height: 36px;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 0 11px;
-    background: #202a22;
-    color: #c3cec5;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.seed-readonly button:hover,
-.seed-action:hover {
-    border-color: var(--green);
-    color: var(--green);
-}
-
-.seed-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 13px;
-}
-
-.fairness-note {
-    color: #78857c;
-    font-size: 10px;
-    line-height: 1.7;
-    margin-top: 14px;
-}
-
-/* HISTORY */
-
-.history-list {
-    max-height: 250px;
-    overflow-y: auto;
-}
-
-.history-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 10px;
-}
-
-.history-row:last-child { border-bottom: 0; }
-
-.history-row span { color: #aab6ad; }
-
-.history-row strong {
-    color: white;
-    font-size: 10px;
-}
-
-.history-row .positive { color: var(--green); }
-.history-row .negative { color: var(--red); }
-
-.history-empty {
-    text-align: center;
-    color: var(--muted);
-    font-size: 11px;
-    padding: 25px 0;
-}
-
-/* TOAST */
-
-.toast {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translate(-50%, 20px);
-    background: #26352a;
-    border: 1px solid #45654b;
-    color: white;
-    border-radius: 7px;
-    padding: 12px 18px;
-    font-size: 11px;
-    opacity: 0;
-    pointer-events: none;
-    transition: .25s;
-    z-index: 100;
-    text-align: center;
-    max-width: calc(100% - 30px);
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translate(-50%, 0);
-}
-
-/* RESPONSIVE */
-
-@media (min-width: 1200px) {
-    .board-panel { padding: 22px; }
-}
-
-@media (max-width: 950px) {
-    .game-layout {
-        grid-template-columns: 250px minmax(0, 1fr);
-    }
-
-    .page { padding: 20px; }
-    .controls { padding: 15px; }
-}
-
-@media (max-width: 720px) {
-    .game-layout { grid-template-columns: 1fr; }
-    .controls { order: 2; }
-    .board-panel { order: 1; }
-    .lower-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 480px) {
-    .topbar {
-        padding: 0 12px;
-        min-height: 62px;
-    }
-
-    .brand { font-size: 12px; }
-
-    .brand-mark {
-        width: 28px;
-        height: 28px;
-    }
-
-    .back-link {
-        font-size: 10px;
-        padding: 5px;
-    }
-
-    .wallet {
-        padding: 8px;
-        font-size: 10px;
-        gap: 4px;
-    }
-
-    .page { padding: 17px 12px; }
-
-    .game-heading {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .board-panel { padding: 8px; }
-
-    .board-top { padding: 0 4px; }
-
-    .history-row {
-        gap: 6px;
-        font-size: 9px;
-    }
+    min-height:70px;background:#141a15;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;padding:0 30px
+}
+.brand {display:flex;align-items:center;gap:10px;font-size:15px;font-weight:900;letter-spacing:1px}
+.brand-mark {width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--green);color:#071007;font-size:21px}
+.brand-light {color:var(--green)}
+.topbar-right {display:flex;align-items:center;gap:12px}
+.back-link {color:#a4b0a7;font-size:12px;font-weight:700;padding:10px}
+.back-link:hover {color:var(--green)}
+.wallet {display:flex;align-items:center;gap:7px;background:#101611;border:1px solid var(--border);border-radius:6px;padding:10px 13px;font-size:12px;font-weight:800}
+.wallet-currency {color:var(--muted);font-size:10px}
+
+.page {width:100%;max-width:1700px;margin:auto;padding:25px 28px}
+.breadcrumb {color:var(--muted);font-size:11px;margin-bottom:20px}
+.breadcrumb span {color:var(--green);padding:0 7px}
+.game-heading {display:flex;align-items:center;justify-content:space-between;margin-bottom:23px}
+.game-heading h1 {font-size:27px;font-weight:900}
+.game-heading p {color:var(--muted);font-size:12px;margin-top:5px}
+.fair-status {display:flex;align-items:center;gap:7px;color:#a5b3a8;font-size:10px;background:#172219;border:1px solid #2a4730;border-radius:20px;padding:8px 12px}
+.fair-dot {height:7px;width:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+
+.game-layout {display:grid;grid-template-columns:285px minmax(0,1fr);gap:16px;align-items:stretch}
+.controls {background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:20px}
+.control-group {margin-bottom:21px}
+.control-label {display:flex;justify-content:space-between;align-items:center;color:#a7b3aa;font-size:11px;font-weight:800;margin-bottom:9px}
+.control-label small {color:var(--muted);font-weight:500}
+.bet-input-wrap {height:43px;display:flex;align-items:center;border:1px solid #354339;background:#101611;border-radius:6px;overflow:hidden}
+.bet-input-wrap:focus-within {border-color:var(--green)}
+.bet-input-wrap input {width:100%;min-width:0;height:100%;border:0;outline:0;background:transparent;color:white;padding:0 12px;font-size:13px;font-weight:800}
+.bet-input-wrap input::-webkit-inner-spin-button,.bet-input-wrap input::-webkit-outer-spin-button {appearance:none}
+.input-currency {padding:0 12px;color:var(--green);font-size:10px;font-weight:900}
+.bet-shortcuts {display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px}
+.bet-shortcuts button {height:29px;border:1px solid var(--border);border-radius:4px;background:#202921;color:#aeb9b1;font-size:10px;font-weight:800}
+.bet-shortcuts button:hover {background:#2c3a2f;color:white}
+
+.risk-options {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.risk-button {height:36px;background:#202921;border:1px solid var(--border);color:#aab5ac;border-radius:5px;font-size:10px;font-weight:800}
+.risk-button.active {background:#1d3823;border-color:var(--green);color:var(--green)}
+.risk-button[data-risk="expert"].active {background:#382024;border-color:#f15b65;color:#ff858b}
+
+.rows-control {display:flex;align-items:center;justify-content:space-between;background:#101611;border:1px solid var(--border);border-radius:6px;padding:5px}
+.rows-control button {width:32px;height:29px;border:0;border-radius:4px;color:white;background:#263229;font-weight:900}
+.rows-control button:hover {color:var(--green)}
+.rows-value {font-size:13px;font-weight:900}
+.play-button {width:100%;height:47px;background:var(--green);color:#061006;border:0;border-radius:6px;font-size:13px;font-weight:1000;margin-top:3px;transition:.18s}
+.play-button:hover:not(:disabled) {background:#28ff29;transform:translateY(-1px)}
+.play-button:disabled {background:#47794a;color:#d7e5d8}
+.control-note {color:#728077;font-size:10px;line-height:1.6;margin-top:13px}
+
+.board-panel {min-width:0;width:100%;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:18px;display:flex;flex-direction:column}
+.board-top {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.board-top h2 {font-size:13px;font-weight:900}
+.board-top span {color:var(--muted);font-size:10px}
+.board-wrapper {width:100%;min-width:0;display:flex;justify-content:center;align-items:center;position:relative}
+#plinkoBoard {display:block;width:100%;max-width:none;height:auto;overflow:visible}
+.peg {fill:#a8b7ab;opacity:.8}
+.ball {fill:var(--green);stroke:#b8ffba;stroke-width:1.5;filter:drop-shadow(0 0 7px #00e701)}
+.bin {stroke:#0d130f;stroke-width:2}
+.bin-label {fill:#071007;font-size:10px;font-weight:900;text-anchor:middle}
+.board-status {text-align:center;min-height:26px;color:var(--muted);font-size:11px;padding-top:7px}
+.board-status strong {color:var(--green)}
+
+.lower-grid {display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:17px}
+.lower-panel {background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:19px;min-width:0}
+.lower-panel h3 {font-size:13px;font-weight:900;margin-bottom:14px}
+.recent-results {display:flex;gap:7px;flex-wrap:wrap}
+.recent-chip {min-width:53px;text-align:center;padding:9px 8px;border-radius:5px;background:#202a22;color:#b8c5ba;font-size:10px;font-weight:900}
+.recent-chip.win {background:#183820;color:var(--green)}
+.recent-chip.loss {background:#382024;color:#ff8b91}
+.recent-empty {color:var(--muted);font-size:11px}
+
+.fairness {background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:20px;margin-top:17px}
+.fairness-heading {display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.fairness-heading h3 {font-size:13px}
+.fairness-heading span {color:var(--green);font-size:10px}
+.seed-field {margin-bottom:13px}
+.seed-field label {display:block;color:#a7b3aa;font-size:10px;font-weight:800;margin-bottom:7px}
+.seed-input {width:100%;min-width:0;height:39px;border:1px solid var(--border);border-radius:5px;background:#101611;color:#c5d1c8;outline:0;padding:0 10px;font-size:10px}
+.seed-input:focus {border-color:var(--green)}
+.seed-readonly {display:flex;align-items:center;gap:8px}
+.seed-readonly input {flex:1}
+.seed-readonly button,.seed-action {flex-shrink:0;height:36px;border:1px solid var(--border);border-radius:5px;padding:0 11px;background:#202a22;color:#c3cec5;font-size:10px;font-weight:800}
+.seed-readonly button:hover,.seed-action:hover {border-color:var(--green);color:var(--green)}
+.seed-actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.fairness-note {color:#78857c;font-size:10px;line-height:1.7;margin-top:14px}
+
+.history-list {max-height:250px;overflow-y:auto}
+.history-row {display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);font-size:10px}
+.history-row:last-child {border-bottom:0}
+.history-row span {color:#aab6ad}
+.history-row strong {color:white;font-size:10px}
+.history-row .positive {color:var(--green)}
+.history-row .negative {color:var(--red)}
+.history-empty {text-align:center;color:var(--muted);font-size:11px;padding:25px 0}
+
+.toast {position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);background:#26352a;border:1px solid #45654b;color:white;border-radius:7px;padding:12px 18px;font-size:11px;opacity:0;pointer-events:none;transition:.25s;z-index:100;text-align:center;max-width:calc(100% - 30px)}
+.toast.show {opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:950px) {
+    .game-layout {grid-template-columns:250px minmax(0,1fr)}
+    .page {padding:20px}
+    .controls {padding:15px}
+}
+@media(max-width:720px) {
+    .game-layout {grid-template-columns:1fr}
+    .controls {order:2}
+    .board-panel {order:1}
+    .lower-grid {grid-template-columns:1fr}
+}
+@media(max-width:480px) {
+    .topbar {padding:0 12px;min-height:62px}
+    .brand {font-size:12px}
+    .brand-mark {width:28px;height:28px}
+    .back-link {font-size:10px;padding:5px}
+    .wallet {padding:8px;font-size:10px;gap:4px}
+    .page {padding:17px 12px}
+    .game-heading {align-items:flex-start;flex-direction:column;gap:12px}
+    .board-panel {padding:8px}
+    .board-top {padding:0 4px}
+    .history-row {gap:6px;font-size:9px}
 }
 </style>
 </head>
@@ -700,10 +156,8 @@ a { text-decoration: none; color: inherit; }
         <span class="brand-mark">V</span>
         <span>VAULT<span class="brand-light">PLAY</span></span>
     </a>
-
     <div class="topbar-right">
         <a href="../index.html" class="back-link">← Laboratory</a>
-
         <div class="wallet">
             <span id="walletBalance">0.00</span>
             <span class="wallet-currency">USDT</span>
@@ -712,17 +166,13 @@ a { text-decoration: none; color: inherit; }
 </header>
 
 <main class="page">
-
-    <div class="breadcrumb">
-        Laboratory <span>/</span> Originals <span>/</span> Plinko
-    </div>
+    <div class="breadcrumb">Laboratory <span>/</span> Originals <span>/</span> Plinko</div>
 
     <div class="game-heading">
         <div>
             <h1>Plinko</h1>
             <p>Drop the ball and discover your multiplier.</p>
         </div>
-
         <div class="fair-status">
             <span class="fair-dot"></span>
             Provably Fair Style
@@ -730,26 +180,13 @@ a { text-decoration: none; color: inherit; }
     </div>
 
     <section class="game-layout">
-
         <aside class="controls">
-
             <div class="control-group">
-                <div class="control-label">
-                    <span>BET AMOUNT</span>
-                    <small>USDT</small>
-                </div>
-
+                <div class="control-label"><span>BET AMOUNT</span><small>USDT</small></div>
                 <div class="bet-input-wrap">
-                    <input
-                        id="betAmount"
-                        type="number"
-                        min="0.01"
-                        step="any"
-                        value="1.00"
-                    >
+                    <input id="betAmount" type="number" min="0.01" step="any" value="1.00">
                     <span class="input-currency">USDT</span>
                 </div>
-
                 <div class="bet-shortcuts">
                     <button id="halfBet">½</button>
                     <button id="doubleBet">2×</button>
@@ -760,20 +197,16 @@ a { text-decoration: none; color: inherit; }
 
             <div class="control-group">
                 <div class="control-label"><span>RISK</span></div>
-
                 <div class="risk-options">
                     <button class="risk-button" data-risk="low">Low</button>
                     <button class="risk-button active" data-risk="medium">Medium</button>
                     <button class="risk-button" data-risk="high">High</button>
+                    <button class="risk-button" data-risk="expert">Expert</button>
                 </div>
             </div>
 
             <div class="control-group">
-                <div class="control-label">
-                    <span>ROWS</span>
-                    <small>8–16</small>
-                </div>
-
+                <div class="control-label"><span>ROWS</span><small>8–16</small></div>
                 <div class="rows-control">
                     <button id="decreaseRows">−</button>
                     <span class="rows-value" id="rowsValue">12</span>
@@ -782,74 +215,49 @@ a { text-decoration: none; color: inherit; }
             </div>
 
             <button class="play-button" id="playButton">DROP BALL</button>
-
             <p class="control-note">
                 Your bet is deducted before the ball drops.
                 Any payout is returned to your virtual balance.
                 This game uses virtual credits only.
             </p>
-
         </aside>
 
         <section class="board-panel">
-
             <div class="board-top">
                 <h2>PLINKO BOARD</h2>
                 <span id="boardInfo">12 rows · Medium risk</span>
             </div>
-
             <div class="board-wrapper">
-                <svg
-                    id="plinkoBoard"
-                    viewBox="0 0 740 520"
-                    role="img"
-                    aria-label="Plinko pegboard"
-                ></svg>
+                <svg id="plinkoBoard" viewBox="0 0 740 520" role="img" aria-label="Plinko pegboard"></svg>
             </div>
-
-            <div class="board-status" id="boardStatus">
-                Ready when you are.
-            </div>
-
+            <div class="board-status" id="boardStatus">Ready when you are.</div>
         </section>
     </section>
 
     <section class="lower-grid">
-
         <div class="lower-panel">
             <h3>RECENT RESULTS</h3>
             <div class="recent-results" id="recentResults">
                 <span class="recent-empty">No results yet.</span>
             </div>
         </div>
-
         <div class="lower-panel">
             <h3>GAME HISTORY</h3>
             <div class="history-list" id="gameHistory">
                 <div class="history-empty">No games played yet.</div>
             </div>
         </div>
-
     </section>
 
     <section class="fairness">
-
         <div class="fairness-heading">
             <h3>Provably Fair</h3>
             <span>SEED SETTINGS</span>
         </div>
-
         <div class="seed-field">
             <label for="clientSeed">CLIENT SEED</label>
-            <input
-                class="seed-input"
-                id="clientSeed"
-                type="text"
-                maxlength="100"
-                autocomplete="off"
-            >
+            <input class="seed-input" id="clientSeed" type="text" maxlength="100" autocomplete="off">
         </div>
-
         <div class="seed-field">
             <label for="serverHash">SERVER SEED HASH</label>
             <div class="seed-readonly">
@@ -857,28 +265,22 @@ a { text-decoration: none; color: inherit; }
                 <button id="copyHash">COPY</button>
             </div>
         </div>
-
         <div class="seed-field">
             <label for="nonceDisplay">NONCE</label>
             <input class="seed-input" id="nonceDisplay" readonly>
         </div>
-
         <div class="seed-actions">
             <button class="seed-action" id="changeSeed">Change Seed Pair</button>
             <button class="seed-action" id="revealSeed">Reveal Current Seed</button>
             <button class="seed-action" id="verifyRound">Verify Last Round</button>
         </div>
-
         <p class="fairness-note" id="fairnessStatus">
             Each round uses a cryptographic HMAC-SHA256 calculation
             based on the server seed, client seed and nonce.
-            The server seed hash is displayed before play.
             This is a browser-local fairness demonstration, not an
             independently operated casino server.
         </p>
-
     </section>
-
 </main>
 
 <div class="toast" id="toast"></div>
@@ -886,7 +288,9 @@ a { text-decoration: none; color: inherit; }
 <script>
 "use strict";
 
-/* STORAGE AND WALLET */
+/* =========================================
+   STORAGE AND WALLET
+========================================= */
 
 const STORAGE = {
     balance: "vaultplay_balance_v1",
@@ -903,31 +307,18 @@ function readJSON(key, fallback) {
     }
 }
 
-/*
- Supports a normal numeric storage value, a JSON number,
- a JSON string, or a wallet object containing a balance.
- The lobby and Plinko still share vaultplay_balance_v1.
-*/
 function readBalance() {
     const raw = localStorage.getItem(STORAGE.balance);
-
     if (raw === null) return 0;
 
     let value = raw;
 
     try {
         value = JSON.parse(raw);
-    } catch {
-        // Keep the original value if it is not JSON.
-    }
+    } catch {}
 
     if (typeof value === "object" && value !== null) {
-        value =
-            value.balance ??
-            value.walletBalance ??
-            value.amount ??
-            value.usdt ??
-            0;
+        value = value.balance ?? value.walletBalance ?? value.amount ?? value.usdt ?? 0;
     }
 
     if (typeof value === "string") {
@@ -935,7 +326,6 @@ function readBalance() {
     }
 
     const number = Number(value);
-
     return Number.isFinite(number) && number >= 0 ? number : 0;
 }
 
@@ -969,11 +359,71 @@ function addWalletHistory(description, amount, type) {
         date: new Date().toISOString()
     });
 
-    localStorage.setItem(
-        STORAGE.history,
-        JSON.stringify(history.slice(0, 100))
-    );
+    localStorage.setItem(STORAGE.history, JSON.stringify(history.slice(0, 100)));
 }
+
+/* =========================================
+   ACTUAL STAKE-STYLE PAYTABLES
+   Values run LEFT TO RIGHT.
+   Each row is symmetrical.
+========================================= */
+
+const PAYTABLES = {
+    8: {
+        low:    [5.6,2.1,1.1,1,0.5,1,1.1,2.1,5.6],
+        medium: [13,3,1.3,0.7,0.4,0.7,1.3,3,13],
+        high:   [29,4,1.5,0.3,0.2,0.3,1.5,4,29],
+        expert: [50,4.6,1.1,0.1,0.1,0.1,1.1,4.6,50]
+    },
+    9: {
+        low:    [5.6,2,1.6,1,0.7,0.7,1,1.6,2,5.6],
+        medium: [18,4,1.7,0.9,0.5,0.5,0.9,1.7,4,18],
+        high:   [43,7,2,0.6,0.2,0.2,0.6,2,7,43],
+        expert: [100,7.8,1.5,0.2,0.1,0.1,0.2,1.5,7.8,100]
+    },
+    10: {
+        low:    [8.9,3,1.4,1.1,1,0.5,1,1.1,1.4,3,8.9],
+        medium: [22,5,2,1.4,0.6,0.4,0.6,1.4,2,5,22],
+        high:   [76,10,3,0.9,0.3,0.2,0.3,0.9,3,10,76],
+        expert: [201,11,2,0.6,0.1,0.1,0.1,0.6,2,11,201]
+    },
+    11: {
+        low:    [8.4,3,1.9,1.3,1,0.7,0.7,1,1.3,1.9,3,8.4],
+        medium: [24,6,3,1.8,0.7,0.5,0.5,0.7,1.8,3,6,24],
+        high:   [120,14,5.2,1.4,0.4,0.2,0.2,0.4,1.4,5.2,14,120],
+        expert: [324,16,4,1.1,0.2,0.1,0.1,0.2,1.1,4,16,324]
+    },
+    12: {
+        low:    [10,3,1.6,1.4,1.1,1,0.5,1,1.1,1.4,1.6,3,10],
+        medium: [33,11,4,2,1.1,0.6,0.3,0.6,1.1,2,4,11,33],
+        high:   [170,24,8.1,2,0.7,0.2,0.2,0.2,0.7,2,8.1,24,170],
+        expert: [619,30,6,1.5,0.4,0.1,0.1,0.1,0.4,1.5,6,30,619]
+    },
+    13: {
+        low:    [8.1,4,3,1.9,1.2,0.9,0.7,0.7,0.9,1.2,1.9,3,4,8.1],
+        medium: [43,13,6,3,1.3,0.7,0.4,0.4,0.7,1.3,3,6,13,43],
+        high:   [260,37,11,4,1,0.2,0.2,0.2,0.2,1,4,11,37,260],
+        expert: [1012,52,10,3,0.6,0.1,0.1,0.1,0.1,0.6,3,10,52,1012]
+    },
+    14: {
+        low:    [7.1,4,1.9,1.4,1.3,1.1,1,0.5,1,1.1,1.3,1.4,1.9,4,7.1],
+        medium: [58,15,7,4,1.9,1,0.5,0.2,0.5,1,1.9,4,7,15,58],
+        high:   [420,56,18,5,1.9,0.3,0.2,0.2,0.2,0.3,1.9,5,18,56,420],
+        expert: [2369,80,16,3,1.2,0.2,0.1,0.1,0.1,0.2,1.2,3,16,80,2369]
+    },
+    15: {
+        low:    [15,8,3,2,1.5,1.1,1,0.7,0.7,1,1.1,1.5,2,3,8,15],
+        medium: [88,18,11,5,3,1.3,0.5,0.3,0.3,0.5,1.3,3,5,11,18,88],
+        high:   [620,83,27,8,3,0.5,0.2,0.2,0.2,0.2,0.5,3,8,27,83,620],
+        expert: [5000,125,23,6,1.8,0.2,0.1,0.1,0.1,0.1,0.2,1.8,6,23,125,5000]
+    },
+    16: {
+        low:    [16,9,2,1.4,1.4,1.2,1.1,1,0.5,1,1.1,1.2,1.4,1.4,2,9,16],
+        medium: [110,41,10,5,3,1.5,1,0.5,0.3,0.5,1,1.5,3,5,10,41,110],
+        high:   [1000,130,26,9,4,2,0.2,0.2,0.2,0.2,0.2,2,4,9,26,130,1000],
+        expert: [10000,216,26,7,2.5,1.1,0.1,0.1,0.1,0.1,0.1,1.1,2.5,7,26,216,10000]
+    }
+};
 
 /* GAME STATE */
 
@@ -987,14 +437,17 @@ const betInput = document.getElementById("betAmount");
 const playButton = document.getElementById("playButton");
 const board = document.getElementById("plinkoBoard");
 const riskButtons = document.querySelectorAll(".risk-button");
-
-const RISK_EXPONENT = {
-    low: 0.8,
-    medium: 1.8,
-    high: 3.0
-};
-
 const MIN_BET = 0.01;
+
+function getMultipliers(rowCount, riskLevel) {
+    const table = PAYTABLES[rowCount]?.[riskLevel];
+
+    if (!table || table.length !== rowCount + 1) {
+        throw new Error("Multiplier table is missing or invalid.");
+    }
+
+    return table;
+}
 
 /* CRYPTOGRAPHIC FAIRNESS */
 
@@ -1028,7 +481,7 @@ async function hmacSHA256(keyText, message) {
     const key = await crypto.subtle.importKey(
         "raw",
         new TextEncoder().encode(keyText),
-        { name: "HMAC", hash: "SHA-256" },
+        {name:"HMAC",hash:"SHA-256"},
         false,
         ["sign"]
     );
@@ -1072,8 +525,7 @@ let fair = loadFairState();
 
 async function updateFairDisplay() {
     document.getElementById("clientSeed").value = fair.clientSeed;
-    document.getElementById("serverHash").value =
-        await sha256(fair.serverSeed);
+    document.getElementById("serverHash").value = await sha256(fair.serverSeed);
     document.getElementById("nonceDisplay").value = fair.nonce;
 }
 
@@ -1093,48 +545,6 @@ function getBin(path) {
     return path.reduce((sum, direction) => sum + direction, 0);
 }
 
-/* MULTIPLIERS */
-
-function combinations(n, k) {
-    if (k < 0 || k > n) return 0;
-
-    let result = 1;
-
-    for (let i = 1; i <= k; i++) {
-        result = result * (n - i + 1) / i;
-    }
-
-    return result;
-}
-
-function getMultipliers(rowCount, riskLevel) {
-    const exponent = RISK_EXPONENT[riskLevel];
-    const raw = [];
-    const probabilities = [];
-
-    for (let bin = 0; bin <= rowCount; bin++) {
-        const probability =
-            combinations(rowCount, bin) / Math.pow(2, rowCount);
-
-        const distance = Math.abs(bin - rowCount / 2);
-        const value = Math.pow(distance + 1, exponent);
-
-        raw.push(value);
-        probabilities.push(probability);
-    }
-
-    const expectedRaw = raw.reduce(
-        (sum, value, index) => sum + value * probabilities[index],
-        0
-    );
-
-    const targetReturn = 0.99;
-
-    return raw.map(value =>
-        Number((value * targetReturn / expectedRaw).toFixed(2))
-    );
-}
-
 /* BOARD DRAWING */
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -1142,7 +552,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 function svgElement(name, attributes = {}) {
     const element = document.createElementNS(SVG_NS, name);
 
-    for (const [key, value] of Object.entries(attributes)) {
+    for (const [key,value] of Object.entries(attributes)) {
         element.setAttribute(key, value);
     }
 
@@ -1157,43 +567,24 @@ function drawBoard() {
     const width = 740;
     const height = 520;
     const center = width / 2;
-
     const topY = 45;
     const rowGap = 25;
     const pegGap = 35;
-
     const binTop = topY + rows * rowGap + 14;
     const binCount = rows + 1;
 
-    /*
-      IMPORTANT:
-      Each slot is exactly as wide as the horizontal
-      distance between possible ball landing positions.
-      This aligns every multiplier with its landing slot.
-    */
+    // Slot width matches the horizontal landing interval.
     const binWidth = pegGap;
     const totalBinWidth = binCount * binWidth;
     const startX = center - totalBinWidth / 2;
 
     boardGeometry = {
-        width,
-        height,
-        center,
-        topY,
-        rowGap,
-        pegGap,
-        binTop,
-        binWidth,
-        startX
+        width,height,center,topY,rowGap,pegGap,
+        binTop,binWidth,startX
     };
 
     board.appendChild(svgElement("rect", {
-        x: 0,
-        y: 0,
-        width,
-        height,
-        fill: "#171e19",
-        rx: 10
+        x:0,y:0,width,height,fill:"#171e19",rx:10
     }));
 
     // Pegs
@@ -1204,15 +595,15 @@ function drawBoard() {
 
         for (let col = 0; col < count; col++) {
             board.appendChild(svgElement("circle", {
-                cx: start + col * pegGap,
-                cy: y,
-                r: 3.8,
-                class: "peg"
+                cx:start + col * pegGap,
+                cy:y,
+                r:3.8,
+                class:"peg"
             }));
         }
     }
 
-    // Multiplier slots
+    // Exact payout slots
     const multipliers = getMultipliers(rows, risk);
 
     for (let i = 0; i < binCount; i++) {
@@ -1220,47 +611,55 @@ function drawBoard() {
         const distance = Math.abs(i - rows / 2);
         const outer = distance >= rows / 2 - 1;
 
-        const hue = risk === "high"
-            ? (outer ? "#e65a63" : "#c38c42")
-            : risk === "medium"
-                ? (outer ? "#c48d3d" : "#398c50")
-                : (outer ? "#528e57" : "#317e49");
+        let hue;
+
+        if (risk === "expert") {
+            hue = outer ? "#ed515d" : "#71343c";
+        } else if (risk === "high") {
+            hue = outer ? "#e65a63" : "#c38c42";
+        } else if (risk === "medium") {
+            hue = outer ? "#c48d3d" : "#398c50";
+        } else {
+            hue = outer ? "#528e57" : "#317e49";
+        }
 
         board.appendChild(svgElement("rect", {
-            x: x + 1,
-            y: binTop,
-            width: binWidth - 2,
-            height: 25,
-            rx: 3,
-            fill: hue,
-            class: "bin"
+            x:x + 1,
+            y:binTop,
+            width:binWidth - 2,
+            height:25,
+            rx:3,
+            fill:hue,
+            class:"bin"
         }));
 
         const label = svgElement("text", {
-            x: x + binWidth / 2,
-            y: binTop + 17,
-            class: "bin-label"
+            x:x + binWidth / 2,
+            y:binTop + 17,
+            class:"bin-label"
         });
 
         label.textContent = `${multipliers[i]}×`;
         board.appendChild(label);
     }
 
-    // Ball
     board.appendChild(svgElement("circle", {
-        id: "movingBall",
-        cx: center,
-        cy: 13,
-        r: 7,
-        class: "ball"
+        id:"movingBall",
+        cx:center,
+        cy:13,
+        r:7,
+        class:"ball"
     }));
 
     updateBoardInfo();
 }
 
 function updateBoardInfo() {
+    const label = risk === "expert" ? "Expert" :
+        risk.charAt(0).toUpperCase() + risk.slice(1);
+
     document.getElementById("boardInfo").textContent =
-        `${rows} rows · ${risk.charAt(0).toUpperCase() + risk.slice(1)} risk`;
+        `${rows} rows · ${label} risk`;
 }
 
 function sleep(ms) {
@@ -1320,8 +719,7 @@ function setRisk(value) {
 
 riskButtons.forEach(button => {
     button.addEventListener("click", () => {
-        if (busy) return;
-        setRisk(button.dataset.risk);
+        if (!busy) setRisk(button.dataset.risk);
     });
 });
 
@@ -1333,19 +731,11 @@ function setRows(value) {
     drawBoard();
 }
 
-document.getElementById("decreaseRows").addEventListener("click", () => {
-    setRows(rows - 1);
-});
-
-document.getElementById("increaseRows").addEventListener("click", () => {
-    setRows(rows + 1);
-});
+document.getElementById("decreaseRows").addEventListener("click", () => setRows(rows - 1));
+document.getElementById("increaseRows").addEventListener("click", () => setRows(rows + 1));
 
 document.getElementById("halfBet").addEventListener("click", () => {
-    betInput.value = Math.max(
-        MIN_BET,
-        Number(betInput.value) / 2
-    ).toFixed(2);
+    betInput.value = Math.max(MIN_BET, Number(betInput.value) / 2).toFixed(2);
 });
 
 document.getElementById("doubleBet").addEventListener("click", () => {
@@ -1366,12 +756,11 @@ function renderGameHistory() {
     const container = document.getElementById("gameHistory");
 
     if (!gameHistory.length) {
-        container.innerHTML =
-            `<div class="history-empty">No games played yet.</div>`;
+        container.innerHTML = `<div class="history-empty">No games played yet.</div>`;
         return;
     }
 
-    container.innerHTML = gameHistory.slice(0, 12).map(item => `
+    container.innerHTML = gameHistory.slice(0,12).map(item => `
         <div class="history-row">
             <span>${item.rows} rows · ${item.risk}</span>
             <strong>${item.multiplier.toFixed(2)}×</strong>
@@ -1386,8 +775,7 @@ function renderRecent() {
     const container = document.getElementById("recentResults");
 
     if (!recent.length) {
-        container.innerHTML =
-            `<span class="recent-empty">No results yet.</span>`;
+        container.innerHTML = `<span class="recent-empty">No results yet.</span>`;
         return;
     }
 
@@ -1400,11 +788,9 @@ function renderRecent() {
 
 function addGameResult(result) {
     gameHistory.unshift(result);
-    gameHistory = gameHistory.slice(0, 50);
-
+    gameHistory = gameHistory.slice(0,50);
     recent.unshift(result);
-    recent = recent.slice(0, 10);
-
+    recent = recent.slice(0,10);
     renderGameHistory();
     renderRecent();
 }
@@ -1415,15 +801,13 @@ let toastTimeout;
 
 function toast(message) {
     const element = document.getElementById("toast");
-
     element.textContent = message;
     element.classList.add("show");
-
     clearTimeout(toastTimeout);
 
     toastTimeout = setTimeout(() => {
         element.classList.remove("show");
-    }, 2500);
+    },2500);
 }
 
 /* PLAY GAME */
@@ -1438,7 +822,6 @@ async function playGame() {
         return;
     }
 
-    // Read the shared wallet again before checking the bet.
     balance = readBalance();
 
     if (bet > balance) {
@@ -1462,6 +845,7 @@ async function playGame() {
     playButton.textContent = "BALL DROPPING...";
 
     let betDeducted = false;
+    let payoutCredited = false;
 
     try {
         balance = Math.round((balance - bet) * 100) / 100;
@@ -1473,6 +857,8 @@ async function playGame() {
         const roundNonce = fair.nonce;
         const roundClientSeed = fair.clientSeed;
         const roundServerSeed = fair.serverSeed;
+        const roundRows = rows;
+        const roundRisk = risk;
 
         const serverSeedHash = await sha256(roundServerSeed);
 
@@ -1480,24 +866,23 @@ async function playGame() {
             roundServerSeed,
             roundClientSeed,
             roundNonce,
-            rows
+            roundRows
         );
 
         const bin = getBin(path);
-        const multipliers = getMultipliers(rows, risk);
-        const multiplier = multipliers[bin];
+        const multiplier = getMultipliers(roundRows, roundRisk)[bin];
 
         const payout = Math.round(bet * multiplier * 100) / 100;
         const profit = Math.round((payout - bet) * 100) / 100;
 
-        document.getElementById("boardStatus").textContent =
-            "Ball is dropping...";
+        document.getElementById("boardStatus").textContent = "Ball is dropping...";
 
         await animateBall(path);
 
         if (payout > 0) {
             balance = Math.round((readBalance() + payout) * 100) / 100;
             saveBalance();
+            payoutCredited = true;
             addWalletHistory("Plinko payout", payout, "credit");
         }
 
@@ -1510,14 +895,14 @@ async function playGame() {
             profit,
             multiplier,
             bin,
-            rows,
-            risk,
+            rows:roundRows,
+            risk:roundRisk,
             path,
-            nonce: roundNonce,
-            clientSeed: roundClientSeed,
-            serverSeed: roundServerSeed,
+            nonce:roundNonce,
+            clientSeed:roundClientSeed,
+            serverSeed:roundServerSeed,
             serverSeedHash,
-            date: new Date().toISOString()
+            date:new Date().toISOString()
         };
 
         fair.lastRound = result;
@@ -1536,16 +921,14 @@ async function playGame() {
     } catch (error) {
         console.error(error);
 
-        /*
-          Refund the bet if the game fails before it finishes.
-        */
-        if (betDeducted) {
+        if (betDeducted && !payoutCredited) {
             balance = Math.round((readBalance() + bet) * 100) / 100;
             saveBalance();
             addWalletHistory("Plinko bet refund", bet, "credit");
+            toast("Something went wrong. Your bet has been refunded.");
+        } else {
+            toast("Something went wrong. Check your balance and reload.");
         }
-
-        toast("Something went wrong. Your bet has been refunded.");
 
     } finally {
         busy = false;
@@ -1571,7 +954,6 @@ document.getElementById("clientSeed").addEventListener("change", event => {
     fair.clientSeed = value;
     saveFairState(fair);
     updateFairDisplay();
-
     toast("Client seed updated.");
 });
 
@@ -1628,9 +1010,8 @@ document.getElementById("verifyRound").addEventListener("click", async () => {
         );
 
         const calculatedBin = getBin(calculatedPath);
-
         const calculatedMultiplier =
-            getMultipliers(result.rows, result.risk)[calculatedBin];
+            getMultipliers(result.rows,result.risk)[calculatedBin];
 
         const valid =
             calculatedHash === result.serverSeedHash &&
@@ -1639,7 +1020,7 @@ document.getElementById("verifyRound").addEventListener("click", async () => {
             calculatedMultiplier === result.multiplier;
 
         document.getElementById("fairnessStatus").textContent = valid
-            ? `VERIFIED: The seed hash, path, bin and multiplier match. Server seed: ${result.serverSeed}. Client seed: ${result.clientSeed}. Nonce: ${result.nonce}.`
+            ? `VERIFIED: Seed hash, path, bin and multiplier match. Server seed: ${result.serverSeed}. Client seed: ${result.clientSeed}. Nonce: ${result.nonce}.`
             : "VERIFICATION FAILED: The calculated result does not match the saved round.";
 
         toast(valid ? "Round verified successfully." : "Verification failed.");
